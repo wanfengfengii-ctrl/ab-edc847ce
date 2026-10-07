@@ -1,0 +1,44 @@
+services:
+  api:
+    build: .
+    image: recipe-replay:latest
+    environment:
+      # Container-internal port; the host mapping is configurable below.
+      PORT: "8080"
+    ports:
+      # Host port is configurable via HOST_PORT, defaulting to 8080.
+      - "${HOST_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "node", "scripts/healthcheck.js"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 2s
+    restart: unless-stopped
+
+  # One-shot verification: starts only once the api dependency is healthy,
+  # then runs the unit tests, builds the application, and runs the HTTP
+  # smoke suite (escaped pointers, array moves, failure atomicity) against
+  # the live api. Its container exit code is the verdict (0 = all green).
+  verify:
+    build: .
+    image: recipe-replay:latest
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      BASE_URL: "http://api:8080"
+      PORT: "8080"
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "==> unit tests"
+        npm run test
+        echo "==> application build"
+        npm run build
+        echo "==> HTTP smoke against http://api:8080"
+        npm run smoke
+        echo "==> VERIFY OK"
+    restart: "no"

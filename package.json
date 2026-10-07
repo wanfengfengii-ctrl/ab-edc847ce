@@ -1,0 +1,18 @@
+{
+  "name": "recipe-replay",
+  "version": "1.0.0",
+  "description": "Ordered RFC 6902 recipe patch replay with RFC 8785 SHA-256 snapshot verification",
+  "type": "commonjs",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/jcs.test.js test/pointer.test.js test/patch.test.js test/replay.test.js",
+    "build": "node scripts/build.js",
+    "smoke": "node test/http-smoke.js",
+    "verify": "npm run test && npm run build && npm run smoke"
+  },
+  "license": "MIT"
+}

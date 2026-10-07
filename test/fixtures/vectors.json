@@ -1,0 +1,6170 @@
+{
+  "fixtures": [
+    {
+      "name": "escaped-pointers-array-move-and-numbers",
+      "request": {
+        "baseline": {
+          "/": 9,
+          "~1": 10,
+          "foo": [
+            "all",
+            "grass",
+            "cows",
+            "eat"
+          ],
+          "nums": [
+            333333333.3333333,
+            1e+30,
+            0.002,
+            1e-27,
+            1424953923781206.2
+          ],
+          "obj": {
+            "€": 1,
+            "z": [
+              1,
+              2,
+              3
+            ],
+            "a/b": "slash",
+            "k~v": "tilde"
+          }
+        },
+        "revisions": [
+          {
+            "revisionId": "esc-and-move",
+            "preHash": "cf332519edb5aca5430d389e5c98a786fa496c2f95ce1372a85c5ba7f720738c",
+            "postHash": "458c60ba69dc145e249a82380db546751bd7dc03fe8a4bd1e84b53c60939a5b9",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/~01",
+                "value": 10
+              },
+              {
+                "op": "test",
+                "path": "/~1",
+                "value": 9
+              },
+              {
+                "op": "test",
+                "path": "/obj/a~1b",
+                "value": "slash"
+              },
+              {
+                "op": "test",
+                "path": "/obj/k~0v",
+                "value": "tilde"
+              },
+              {
+                "op": "move",
+                "from": "/foo/1",
+                "path": "/foo/3"
+              },
+              {
+                "op": "add",
+                "path": "/foo/-",
+                "value": "end"
+              }
+            ]
+          },
+          {
+            "revisionId": "shift",
+            "preHash": "458c60ba69dc145e249a82380db546751bd7dc03fe8a4bd1e84b53c60939a5b9",
+            "postHash": "e66e551aad4216b314302048c0b581c59cafde273a5a21e278342b0ac750acde",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/foo/3",
+                "value": "grass"
+              },
+              {
+                "op": "test",
+                "path": "/foo/4",
+                "value": "end"
+              },
+              {
+                "op": "remove",
+                "path": "/foo/0"
+              },
+              {
+                "op": "copy",
+                "from": "/~01",
+                "path": "/foo/0"
+              },
+              {
+                "op": "add",
+                "path": "/new",
+                "value": [
+                  1.0,
+                  1,
+                  "1",
+                  null,
+                  true,
+                  false
+                ]
+              },
+              {
+                "op": "replace",
+                "path": "/nums/0",
+                "value": 333333333.3333333
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "esc-and-move",
+          "shift"
+        ],
+        "postHashes": [
+          "458c60ba69dc145e249a82380db546751bd7dc03fe8a4bd1e84b53c60939a5b9",
+          "e66e551aad4216b314302048c0b581c59cafde273a5a21e278342b0ac750acde"
+        ],
+        "finalHash": "e66e551aad4216b314302048c0b581c59cafde273a5a21e278342b0ac750acde",
+        "finalDocument": {
+          "/": 9,
+          "~1": 10,
+          "foo": [
+            10,
+            "cows",
+            "eat",
+            "grass",
+            "end"
+          ],
+          "nums": [
+            333333333.3333333,
+            1e+30,
+            0.002,
+            1e-27,
+            1424953923781206.2
+          ],
+          "obj": {
+            "€": 1,
+            "z": [
+              1,
+              2,
+              3
+            ],
+            "a/b": "slash",
+            "k~v": "tilde"
+          },
+          "new": [
+            1.0,
+            1,
+            "1",
+            null,
+            true,
+            false
+          ]
+        }
+      }
+    },
+    {
+      "name": "numeric-representation-stability",
+      "request": {
+        "baseline": {
+          "v": 333333333.3333333,
+          "big": 295147905179352830000,
+          "tiny": 1e-27,
+          "negzero": -0.0
+        },
+        "revisions": [
+          {
+            "revisionId": "num-test",
+            "preHash": "32c31797e15a840bacdce9e2a63adea3aef90af8786852cf802aae6bc374aa01",
+            "postHash": "32c31797e15a840bacdce9e2a63adea3aef90af8786852cf802aae6bc374aa01",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/v",
+                "value": 333333333.3333333
+              },
+              {
+                "op": "test",
+                "path": "/big",
+                "value": 295147905179352830000
+              },
+              {
+                "op": "test",
+                "path": "/negzero",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "num-test"
+        ],
+        "postHashes": [
+          "32c31797e15a840bacdce9e2a63adea3aef90af8786852cf802aae6bc374aa01"
+        ],
+        "finalHash": "32c31797e15a840bacdce9e2a63adea3aef90af8786852cf802aae6bc374aa01",
+        "finalDocument": {
+          "v": 333333333.3333333,
+          "big": 295147905179352830000,
+          "tiny": 1e-27,
+          "negzero": -0.0
+        }
+      }
+    },
+    {
+      "name": "root-replace-and-array-shift",
+      "request": {
+        "baseline": {
+          "old": true
+        },
+        "revisions": [
+          {
+            "revisionId": "root-replace",
+            "preHash": "dd5bd9926ee66fb517ac5a2617d13c198732f640705f5edc0438c9fe0b257d3e",
+            "postHash": "0bf7615c2bb97c09ed3a9d8de032cf8d3ef514a9c40b3e0e8b1baacd52ec3778",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": {
+                  "a": [
+                    0,
+                    0
+                  ],
+                  "s": "x"
+                }
+              }
+            ]
+          },
+          {
+            "revisionId": "rework",
+            "preHash": "0bf7615c2bb97c09ed3a9d8de032cf8d3ef514a9c40b3e0e8b1baacd52ec3778",
+            "postHash": "7848364396ec0bbd321a5d502a64e12a5674cfff97e21346b82d55d7039fca2e",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/a/1",
+                "value": 1
+              },
+              {
+                "op": "move",
+                "from": "/s",
+                "path": "/t"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "root-replace",
+          "rework"
+        ],
+        "postHashes": [
+          "0bf7615c2bb97c09ed3a9d8de032cf8d3ef514a9c40b3e0e8b1baacd52ec3778",
+          "7848364396ec0bbd321a5d502a64e12a5674cfff97e21346b82d55d7039fca2e"
+        ],
+        "finalHash": "7848364396ec0bbd321a5d502a64e12a5674cfff97e21346b82d55d7039fca2e",
+        "finalDocument": {
+          "a": [
+            0,
+            1,
+            0
+          ],
+          "t": "x"
+        }
+      }
+    },
+    {
+      "name": "pre-hash-mismatch",
+      "request": {
+        "baseline": {
+          "a": 1
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "0000000000000000000000000000000000000000000000000000000000000001",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/a",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "PRE_HASH_MISMATCH",
+        "revisionIndex": 0,
+        "operationIndex": null,
+        "stage": "pre"
+      }
+    },
+    {
+      "name": "post-hash-mismatch",
+      "request": {
+        "baseline": {
+          "a": 1
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+            "postHash": "43258cff783fe7036d8a43033f830adfc60ec037382473548ac742b888292770",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/b",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "POST_HASH_MISMATCH",
+        "revisionIndex": 0,
+        "operationIndex": null,
+        "stage": "post"
+      }
+    },
+    {
+      "name": "test-failure-position",
+      "request": {
+        "baseline": {
+          "a": 1
+        },
+        "revisions": [
+          {
+            "revisionId": "ok",
+            "preHash": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+            "postHash": "43258cff783fe7036d8a43033f830adfc60ec037382473548ac742b888292777",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/b",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "revisionId": "bad-test",
+            "preHash": "43258cff783fe7036d8a43033f830adfc60ec037382473548ac742b888292777",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/c",
+                "value": 3
+              },
+              {
+                "op": "test",
+                "path": "/a",
+                "value": "different"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "TEST_ASSERTION_FAILED",
+        "revisionIndex": 1,
+        "operationIndex": 1
+      }
+    },
+    {
+      "name": "test-type-mismatch",
+      "request": {
+        "baseline": {
+          "/": 9
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "0b97a733ce094cd5b7ebc57b2d7f6f6b013f1550fdc4a59f5f6e06a0ad1ade17",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/~01",
+                "value": "10"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "POINTER_TARGET_NOT_FOUND",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "test-string-vs-number",
+      "request": {
+        "baseline": {
+          "x": 10
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "7fda1da3875124acd2f6190c3eeb3c1ad9893928d89795c1c640d59a0894d7c6",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/x",
+                "value": "10"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "TEST_ASSERTION_FAILED",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "bad-pointer-escape",
+      "request": {
+        "baseline": {
+          "a": 1
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/a~2b"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "INVALID_POINTER_SYNTAX",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "pointer-missing-leading-slash",
+      "request": {
+        "baseline": {
+          "a": 1
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "a"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "INVALID_POINTER_SYNTAX",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "pointer-dangling-escape",
+      "request": {
+        "baseline": {
+          "a": 1
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/a~"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "INVALID_POINTER_SYNTAX",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "array-index-leading-zero",
+      "request": {
+        "baseline": {
+          "a": [
+            1,
+            2,
+            3
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "730bc329ebcd24c6c9663ca4bb0e199a090dbf9d9d1058651d8560236abb1095",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/a/01"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "INVALID_POINTER_SYNTAX",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "array-index-out-of-range",
+      "request": {
+        "baseline": {
+          "a": [
+            1,
+            2,
+            3
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "730bc329ebcd24c6c9663ca4bb0e199a090dbf9d9d1058651d8560236abb1095",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/a/5",
+                "value": 9
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "ARRAY_INDEX_OUT_OF_RANGE",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "array-dash-not-removable",
+      "request": {
+        "baseline": {
+          "a": [
+            1,
+            2,
+            3
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "730bc329ebcd24c6c9663ca4bb0e199a090dbf9d9d1058651d8560236abb1095",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/a/-"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "POINTER_TARGET_NOT_FOUND",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "traversal-through-scalar",
+      "request": {
+        "baseline": {
+          "a": [
+            1,
+            2,
+            3
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "730bc329ebcd24c6c9663ca4bb0e199a090dbf9d9d1058651d8560236abb1095",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/a/0/x"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "POINTER_TRAVERSAL_FAILURE",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "move-into-descendant",
+      "request": {
+        "baseline": {
+          "a": [
+            1,
+            2,
+            3
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "730bc329ebcd24c6c9663ca4bb0e199a090dbf9d9d1058651d8560236abb1095",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/a",
+                "path": "/a/0/x"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "MOVE_INTO_DESCENDANT",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "unknown-operation",
+      "request": {
+        "baseline": {
+          "a": 1
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "frobnicate",
+                "path": "/a",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "UNKNOWN_OPERATION",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "missing-value",
+      "request": {
+        "baseline": {
+          "a": 1
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/a"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "MISSING_VALUE",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "missing-from",
+      "request": {
+        "baseline": {
+          "a": 1
+        },
+        "revisions": [
+          {
+            "revisionId": "r",
+            "preHash": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "move",
+                "path": "/b"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "MISSING_FROM",
+        "revisionIndex": 0,
+        "operationIndex": 0
+      }
+    },
+    {
+      "name": "failed-revision-is-atomic",
+      "request": {
+        "baseline": {
+          "a": [
+            1,
+            2,
+            3
+          ],
+          "marker": 0
+        },
+        "revisions": [
+          {
+            "revisionId": "ok-add",
+            "preHash": "c655678957593038ad89d849d5c12e2d6aca1d5d0b86ea552640292520755f61",
+            "postHash": "9051face3840f11e02d9cd96eb8787f23c7dd10d97dca742005cbd399923b656",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/marker",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "revisionId": "fails-midway",
+            "preHash": "9051face3840f11e02d9cd96eb8787f23c7dd10d97dca742005cbd399923b656",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/a/-",
+                "value": 9
+              },
+              {
+                "op": "test",
+                "path": "/a/0",
+                "value": "nope"
+              }
+            ]
+          },
+          {
+            "revisionId": "must-not-run",
+            "preHash": "4b10b5cd75cf3189e6e03db099e3e5232c3d0f42fca397c4a5103aaa182a6300",
+            "postHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/never",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "status": 422,
+      "expect": {
+        "code": "TEST_ASSERTION_FAILED",
+        "revisionIndex": 1,
+        "operationIndex": 1
+      }
+    },
+    {
+      "name": "utf16-property-sort",
+      "request": {
+        "baseline": {
+          "€": "Euro Sign",
+          "\r": "Carriage Return",
+          "דּ": "Hebrew Letter Dalet With Dagesh",
+          "1": "One",
+          "😀": "Emoji: Grinning Face",
+          "": "Control",
+          "ö": "Latin Small Letter O With Diaeresis"
+        },
+        "revisions": [
+          {
+            "revisionId": "unicode-test",
+            "preHash": "5e321556d22018a9656991a9e94f77ec175fa193e52a2429d312f8419ec8b08c",
+            "postHash": "5e321556d22018a9656991a9e94f77ec175fa193e52a2429d312f8419ec8b08c",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/1",
+                "value": "One"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "unicode-test"
+        ],
+        "postHashes": [
+          "5e321556d22018a9656991a9e94f77ec175fa193e52a2429d312f8419ec8b08c"
+        ],
+        "finalHash": "5e321556d22018a9656991a9e94f77ec175fa193e52a2429d312f8419ec8b08c",
+        "finalDocument": {
+          "€": "Euro Sign",
+          "\r": "Carriage Return",
+          "דּ": "Hebrew Letter Dalet With Dagesh",
+          "1": "One",
+          "😀": "Emoji: Grinning Face",
+          "": "Control",
+          "ö": "Latin Small Letter O With Diaeresis"
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-0",
+      "request": {
+        "baseline": {
+          "root": false
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-0-r0",
+            "preHash": "33d0ca64a8c8b3424de5b52875e141d40e4389868f1db5648aae7cf65a1158ef",
+            "postHash": "a41815e16e95d9089a6af873f02d5c7f59cb91366998572202643f301196e7d9",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/a~1b65620"
+              },
+              {
+                "op": "copy",
+                "from": "/a~1b65620",
+                "path": "/x24963"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-0-r0"
+        ],
+        "postHashes": [
+          "a41815e16e95d9089a6af873f02d5c7f59cb91366998572202643f301196e7d9"
+        ],
+        "finalHash": "a41815e16e95d9089a6af873f02d5c7f59cb91366998572202643f301196e7d9",
+        "finalDocument": {
+          "a/b65620": false,
+          "x24963": false
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-1",
+      "request": {
+        "baseline": {
+          "root": "a/b"
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-1-r0",
+            "preHash": "7ba4ac23f7514c10911fea7a2ace68b76665f2246c364780e7124a9443194274",
+            "postHash": "081acbfc829293ee7bc862c0a756b884b22d89ffca10d90f434809b66cafa370",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/a~1b348"
+              },
+              {
+                "op": "remove",
+                "path": "/a~1b348"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": 39929.41243088322
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-1-r0"
+        ],
+        "postHashes": [
+          "081acbfc829293ee7bc862c0a756b884b22d89ffca10d90f434809b66cafa370"
+        ],
+        "finalHash": "081acbfc829293ee7bc862c0a756b884b22d89ffca10d90f434809b66cafa370",
+        "finalDocument": 39929.41243088322
+      }
+    },
+    {
+      "name": "fuzz-chain-2",
+      "request": {
+        "baseline": {},
+        "revisions": [
+          {
+            "revisionId": "fuzz-2-r0",
+            "preHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "postHash": "47f0704084ab74450736b539d157c0eafa0dba6294f1fa8853ac70f46958c722",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/x6944",
+                "value": -9007199254740993
+              },
+              {
+                "op": "add",
+                "path": "/96130",
+                "value": {
+                  "€": {
+                    "a/b": ""
+                  }
+                }
+              },
+              {
+                "op": "remove",
+                "path": "/96130/€/a~1b"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-2-r1",
+            "preHash": "47f0704084ab74450736b539d157c0eafa0dba6294f1fa8853ac70f46958c722",
+            "postHash": "ac6c64dd9885bbb9868dac20d1f4c181a7300557a64d318df0af064d53bb80d4",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/96130/€"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": [
+                  {},
+                  {},
+                  -9007199254740993
+                ]
+              },
+              {
+                "op": "remove",
+                "path": "/0"
+              },
+              {
+                "op": "add",
+                "path": "/-",
+                "value": []
+              },
+              {
+                "op": "remove",
+                "path": "/0"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-2-r2",
+            "preHash": "ac6c64dd9885bbb9868dac20d1f4c181a7300557a64d318df0af064d53bb80d4",
+            "postHash": "9f30f4519e8f00268f389b14de9d84b11294fd87ee1acbec27a5ca92f56efef2",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/0",
+                "path": "/1/-"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-2-r3",
+            "preHash": "9f30f4519e8f00268f389b14de9d84b11294fd87ee1acbec27a5ca92f56efef2",
+            "postHash": "149ed0f59bee71d0fa55d8ce900580c9abf8d2252da7fc5351c5665edda2467a",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/-",
+                "value": "back\\slash"
+              },
+              {
+                "op": "remove",
+                "path": "/0"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-2-r4",
+            "preHash": "149ed0f59bee71d0fa55d8ce900580c9abf8d2252da7fc5351c5665edda2467a",
+            "postHash": "c3ff99b8d68d80564a73328a801b495667db5795661d0eebe8408b3885ff0509",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/0/-",
+                "value": "k~v"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-2-r5",
+            "preHash": "c3ff99b8d68d80564a73328a801b495667db5795661d0eebe8408b3885ff0509",
+            "postHash": "3aa397f028088877a9bfef892ff36308aede0f71797323e4acb24b0498800a66",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/0/1"
+              },
+              {
+                "op": "replace",
+                "path": "/0",
+                "value": [
+                  null,
+                  [],
+                  {}
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-2-r0",
+          "fuzz-2-r1",
+          "fuzz-2-r2",
+          "fuzz-2-r3",
+          "fuzz-2-r4",
+          "fuzz-2-r5"
+        ],
+        "postHashes": [
+          "47f0704084ab74450736b539d157c0eafa0dba6294f1fa8853ac70f46958c722",
+          "ac6c64dd9885bbb9868dac20d1f4c181a7300557a64d318df0af064d53bb80d4",
+          "9f30f4519e8f00268f389b14de9d84b11294fd87ee1acbec27a5ca92f56efef2",
+          "149ed0f59bee71d0fa55d8ce900580c9abf8d2252da7fc5351c5665edda2467a",
+          "c3ff99b8d68d80564a73328a801b495667db5795661d0eebe8408b3885ff0509",
+          "3aa397f028088877a9bfef892ff36308aede0f71797323e4acb24b0498800a66"
+        ],
+        "finalHash": "3aa397f028088877a9bfef892ff36308aede0f71797323e4acb24b0498800a66",
+        "finalDocument": [
+          [
+            null,
+            [],
+            {}
+          ],
+          "back\\slash"
+        ]
+      }
+    },
+    {
+      "name": "fuzz-chain-3",
+      "request": {
+        "baseline": {
+          "root": true
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-3-r0",
+            "preHash": "fed700e9412a1ebd3ea225942feb91e6dae088a513972c143bd134a1f66e0585",
+            "postHash": "6bd9be1c141028789cc35db62f1b43e80d5d4ee24d6d542e775deb16799ff4c7",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/k~0v45782"
+              },
+              {
+                "op": "remove",
+                "path": "/k~0v45782"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": 333333333.3333333
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-3-r1",
+            "preHash": "6bd9be1c141028789cc35db62f1b43e80d5d4ee24d6d542e775deb16799ff4c7",
+            "postHash": "778030db42a16888251d68033590b4604427bdaa205ac18320feaea2a08289ab",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": []
+              },
+              {
+                "op": "add",
+                "path": "/-",
+                "value": false
+              },
+              {
+                "op": "copy",
+                "from": "/0",
+                "path": "/-"
+              },
+              {
+                "op": "add",
+                "path": "/-",
+                "value": {
+                  "x": false
+                }
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-3-r2",
+            "preHash": "778030db42a16888251d68033590b4604427bdaa205ac18320feaea2a08289ab",
+            "postHash": "d82b619a29e68b07ab1af9a18818c1144b675843b06490571a2ff88e63a7e05a",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/0",
+                "path": "/2/x51489"
+              },
+              {
+                "op": "copy",
+                "from": "/0",
+                "path": "/-"
+              },
+              {
+                "op": "test",
+                "path": "/1",
+                "value": false
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-3-r3",
+            "preHash": "d82b619a29e68b07ab1af9a18818c1144b675843b06490571a2ff88e63a7e05a",
+            "postHash": "e36f6fe66dbca94f016a32f6da4a0f6e3ee0dbd9da85a03ab50b978c306aea14",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/2",
+                "path": "/-"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-3-r4",
+            "preHash": "e36f6fe66dbca94f016a32f6da4a0f6e3ee0dbd9da85a03ab50b978c306aea14",
+            "postHash": "f71728f84abc1e2080264ed6b2784142f816b11ac9e214456e1682efec8f8779",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/3",
+                "value": false
+              },
+              {
+                "op": "test",
+                "path": "/4/x51489",
+                "value": false
+              },
+              {
+                "op": "replace",
+                "path": "/4",
+                "value": {
+                  "n": {
+                    "k~v": null,
+                    "😀": false,
+                    "n": null
+                  }
+                }
+              },
+              {
+                "op": "copy",
+                "from": "/4/n/n",
+                "path": "/5"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-3-r5",
+            "preHash": "f71728f84abc1e2080264ed6b2784142f816b11ac9e214456e1682efec8f8779",
+            "postHash": "9ef31cca1fd1b4c3fae42a0498ab6b557bd64c108ea5b16270389cc60c75ccea",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/4/n",
+                "value": {
+                  "": {
+                    "n": true,
+                    "a/b": null,
+                    "k~v": "k~v"
+                  }
+                }
+              },
+              {
+                "op": "move",
+                "from": "/2/x51489",
+                "path": "/-"
+              },
+              {
+                "op": "remove",
+                "path": "/0"
+              },
+              {
+                "op": "copy",
+                "from": "/3/n//n",
+                "path": "/1/77360"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-3-r0",
+          "fuzz-3-r1",
+          "fuzz-3-r2",
+          "fuzz-3-r3",
+          "fuzz-3-r4",
+          "fuzz-3-r5"
+        ],
+        "postHashes": [
+          "6bd9be1c141028789cc35db62f1b43e80d5d4ee24d6d542e775deb16799ff4c7",
+          "778030db42a16888251d68033590b4604427bdaa205ac18320feaea2a08289ab",
+          "d82b619a29e68b07ab1af9a18818c1144b675843b06490571a2ff88e63a7e05a",
+          "e36f6fe66dbca94f016a32f6da4a0f6e3ee0dbd9da85a03ab50b978c306aea14",
+          "f71728f84abc1e2080264ed6b2784142f816b11ac9e214456e1682efec8f8779",
+          "9ef31cca1fd1b4c3fae42a0498ab6b557bd64c108ea5b16270389cc60c75ccea"
+        ],
+        "finalHash": "9ef31cca1fd1b4c3fae42a0498ab6b557bd64c108ea5b16270389cc60c75ccea",
+        "finalDocument": [
+          false,
+          {
+            "x": false,
+            "77360": true
+          },
+          false,
+          {
+            "n": {
+              "": {
+                "n": true,
+                "a/b": null,
+                "k~v": "k~v"
+              }
+            }
+          },
+          null,
+          false
+        ]
+      }
+    },
+    {
+      "name": "fuzz-chain-4",
+      "request": {
+        "baseline": {
+          "": {},
+          "m": {
+            "€": "x"
+          },
+          "n": []
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-4-r0",
+            "preHash": "4c6df75714d549124f1290a8e3cc839e3fbf88b1adbbd3fc3813f62a995bad38",
+            "postHash": "62621823bbc06575f2bd55ee117022433fccfae42cbc2da9c7bcc0bf5c4bb47d",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/"
+              },
+              {
+                "op": "add",
+                "path": "/m/x47172",
+                "value": 333333333.3333333
+              },
+              {
+                "op": "copy",
+                "from": "/n",
+                "path": "/m/x81904"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-4-r1",
+            "preHash": "62621823bbc06575f2bd55ee117022433fccfae42cbc2da9c7bcc0bf5c4bb47d",
+            "postHash": "e7a3617bbab04019cd94947e590ee29abd886d51497e4cc39d743834312093e1",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/m/x81904",
+                "path": "/k~0v68468"
+              },
+              {
+                "op": "remove",
+                "path": "/n"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-4-r2",
+            "preHash": "e7a3617bbab04019cd94947e590ee29abd886d51497e4cc39d743834312093e1",
+            "postHash": "b1562c0f6ced91477f42c2f18e393c5665f64aaf52fe7b574dd1cc5315f917e5",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": {
+                  "m": {
+                    "€": "x",
+                    "x47172": 333333333.3333333
+                  },
+                  "k~v68468": []
+                }
+              },
+              {
+                "op": "remove",
+                "path": "/m/€"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-4-r3",
+            "preHash": "b1562c0f6ced91477f42c2f18e393c5665f64aaf52fe7b574dd1cc5315f917e5",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/k~0v68468"
+              },
+              {
+                "op": "remove",
+                "path": "/m"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-4-r4",
+            "preHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/30422",
+                "value": 7
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": {
+                  "k~v": {}
+                }
+              },
+              {
+                "op": "remove",
+                "path": "/k~0v"
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {}
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-4-r5",
+            "preHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "postHash": "6c13dcba84f4605f1be3d608a8217924d7fdad61cb262d03575a6a1d903b9b83",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/k~0v95084",
+                "value": "x"
+              },
+              {
+                "op": "test",
+                "path": "/k~0v95084",
+                "value": "x"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-4-r0",
+          "fuzz-4-r1",
+          "fuzz-4-r2",
+          "fuzz-4-r3",
+          "fuzz-4-r4",
+          "fuzz-4-r5"
+        ],
+        "postHashes": [
+          "62621823bbc06575f2bd55ee117022433fccfae42cbc2da9c7bcc0bf5c4bb47d",
+          "e7a3617bbab04019cd94947e590ee29abd886d51497e4cc39d743834312093e1",
+          "b1562c0f6ced91477f42c2f18e393c5665f64aaf52fe7b574dd1cc5315f917e5",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "6c13dcba84f4605f1be3d608a8217924d7fdad61cb262d03575a6a1d903b9b83"
+        ],
+        "finalHash": "6c13dcba84f4605f1be3d608a8217924d7fdad61cb262d03575a6a1d903b9b83",
+        "finalDocument": {
+          "k~v95084": "x"
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-5",
+      "request": {
+        "baseline": {
+          "root": 3.141592653589793
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-5-r0",
+            "preHash": "515b9bd5eec3ff9db5b1e158ef1547a6c9cf26f9bf5070d75357ddfb6689d352",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/root"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-5-r1",
+            "preHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": {}
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {}
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-5-r2",
+            "preHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "postHash": "a5123deba27073b1b3f5c3b303e69a2fe551168c973a4b826ecaccc2952f5c5b",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/new56345",
+                "value": 405438.5343216534
+              },
+              {
+                "op": "add",
+                "path": "/new71302",
+                "value": []
+              },
+              {
+                "op": "move",
+                "from": "/new71302",
+                "path": "/x36987"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-5-r0",
+          "fuzz-5-r1",
+          "fuzz-5-r2"
+        ],
+        "postHashes": [
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "a5123deba27073b1b3f5c3b303e69a2fe551168c973a4b826ecaccc2952f5c5b"
+        ],
+        "finalHash": "a5123deba27073b1b3f5c3b303e69a2fe551168c973a4b826ecaccc2952f5c5b",
+        "finalDocument": {
+          "new56345": 405438.5343216534,
+          "x36987": []
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-6",
+      "request": {
+        "baseline": {
+          "root": [
+            null
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-6-r0",
+            "preHash": "1b1d5c85002dcfd5d922b41df8f54e46add64a325006d46f2cd9ca959e410bd8",
+            "postHash": "68fbd3e2bf8ae6e3bf4be39ccf765ff3513f909454612eb20f41d02716edfcd4",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/new5865",
+                "value": 42
+              },
+              {
+                "op": "remove",
+                "path": "/root"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-6-r1",
+            "preHash": "68fbd3e2bf8ae6e3bf4be39ccf765ff3513f909454612eb20f41d02716edfcd4",
+            "postHash": "8f762409f0704aa15369349fd30c3467e5a00c117816e3940444fe6bd33af92d",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/new5865",
+                "path": "/x86940"
+              },
+              {
+                "op": "replace",
+                "path": "/new5865",
+                "value": 0.0
+              },
+              {
+                "op": "copy",
+                "from": "/new5865",
+                "path": "/a~1b18007"
+              },
+              {
+                "op": "add",
+                "path": "/43175",
+                "value": true
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": [
+                  {
+                    "x": "line\nbreak"
+                  },
+                  {
+                    "€": "tab\tend",
+                    "n": "k~v"
+                  },
+                  [
+                    "back\\slash"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-6-r2",
+            "preHash": "8f762409f0704aa15369349fd30c3467e5a00c117816e3940444fe6bd33af92d",
+            "postHash": "8c6ce2560c476671f9fb4b7bb459514b4b419d0fb8fe1466cdb7ec7f4c8824c3",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/2/-",
+                "value": 42
+              },
+              {
+                "op": "copy",
+                "from": "/1",
+                "path": "/0/new25178"
+              },
+              {
+                "op": "replace",
+                "path": "/0/new25178",
+                "value": 42
+              },
+              {
+                "op": "add",
+                "path": "/0/43703",
+                "value": [
+                  [
+                    "€",
+                    null
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-6-r3",
+            "preHash": "8c6ce2560c476671f9fb4b7bb459514b4b419d0fb8fe1466cdb7ec7f4c8824c3",
+            "postHash": "6a1daf8d609040440ee2557c518192f86ea7d425889ff3bded4db81017b6e1e3",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/0/43703/0",
+                "value": 2.2250738585072014e-308
+              },
+              {
+                "op": "move",
+                "from": "/0/43703",
+                "path": "/0/x37298"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-6-r4",
+            "preHash": "6a1daf8d609040440ee2557c518192f86ea7d425889ff3bded4db81017b6e1e3",
+            "postHash": "4ace554dcc0f92b60e348c3241eb2a0611a09c67f5b0139df2577fee1b7410b6",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/1/n",
+                "path": "/0/x6994"
+              },
+              {
+                "op": "test",
+                "path": "/2/0",
+                "value": "back\\slash"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-6-r5",
+            "preHash": "4ace554dcc0f92b60e348c3241eb2a0611a09c67f5b0139df2577fee1b7410b6",
+            "postHash": "d6ef40009864f9f4e83819e72f5a8c5c033c4a19b1ada73390cda97b971fb8e1",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/1",
+                "value": null
+              },
+              {
+                "op": "remove",
+                "path": "/3/0"
+              },
+              {
+                "op": "replace",
+                "path": "/0/new25178",
+                "value": {
+                  "x": [
+                    422681.1262606814,
+                    1
+                  ],
+                  "a/b": {
+                    "😀": true,
+                    "m": -1
+                  }
+                }
+              },
+              {
+                "op": "add",
+                "path": "/2/a~1b4437",
+                "value": {
+                  "k~v": "quote\"",
+                  "€": {
+                    "x": 0.1,
+                    "": 0.1
+                  },
+                  "x": [
+                    "back\\slash",
+                    7,
+                    "quote\""
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-6-r0",
+          "fuzz-6-r1",
+          "fuzz-6-r2",
+          "fuzz-6-r3",
+          "fuzz-6-r4",
+          "fuzz-6-r5"
+        ],
+        "postHashes": [
+          "68fbd3e2bf8ae6e3bf4be39ccf765ff3513f909454612eb20f41d02716edfcd4",
+          "8f762409f0704aa15369349fd30c3467e5a00c117816e3940444fe6bd33af92d",
+          "8c6ce2560c476671f9fb4b7bb459514b4b419d0fb8fe1466cdb7ec7f4c8824c3",
+          "6a1daf8d609040440ee2557c518192f86ea7d425889ff3bded4db81017b6e1e3",
+          "4ace554dcc0f92b60e348c3241eb2a0611a09c67f5b0139df2577fee1b7410b6",
+          "d6ef40009864f9f4e83819e72f5a8c5c033c4a19b1ada73390cda97b971fb8e1"
+        ],
+        "finalHash": "d6ef40009864f9f4e83819e72f5a8c5c033c4a19b1ada73390cda97b971fb8e1",
+        "finalDocument": [
+          {
+            "x": "line\nbreak",
+            "new25178": {
+              "x": [
+                422681.1262606814,
+                1
+              ],
+              "a/b": {
+                "😀": true,
+                "m": -1
+              }
+            },
+            "x37298": [
+              2.2250738585072014e-308,
+              [
+                "€",
+                null
+              ]
+            ],
+            "x6994": "k~v"
+          },
+          null,
+          {
+            "€": "tab\tend",
+            "n": "k~v",
+            "a/b4437": {
+              "k~v": "quote\"",
+              "€": {
+                "x": 0.1,
+                "": 0.1
+              },
+              "x": [
+                "back\\slash",
+                7,
+                "quote\""
+              ]
+            }
+          },
+          [
+            42
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fuzz-chain-7",
+      "request": {
+        "baseline": {
+          "root": 2.2250738585072014e-308
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-7-r0",
+            "preHash": "4cda57d6b09154203e1430fe310fa021eb2f723f6ecb3740db218e0a28afaeb4",
+            "postHash": "1255e9a62a7114d8db056836036c2f67787b32ad4fa4b8969dc80e35b4c0475d",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/new73374"
+              },
+              {
+                "op": "add",
+                "path": "/k~0v91680",
+                "value": 1
+              },
+              {
+                "op": "add",
+                "path": "/x98414",
+                "value": {
+                  "m": {},
+                  "€": [
+                    1,
+                    42,
+                    0.1
+                  ]
+                }
+              },
+              {
+                "op": "add",
+                "path": "/x98414/new12696",
+                "value": []
+              },
+              {
+                "op": "copy",
+                "from": "/k~0v91680",
+                "path": "/x98414/€66354"
+              },
+              {
+                "op": "add",
+                "path": "/x98414/€/1",
+                "value": {}
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-7-r0"
+        ],
+        "postHashes": [
+          "1255e9a62a7114d8db056836036c2f67787b32ad4fa4b8969dc80e35b4c0475d"
+        ],
+        "finalHash": "1255e9a62a7114d8db056836036c2f67787b32ad4fa4b8969dc80e35b4c0475d",
+        "finalDocument": {
+          "new73374": 2.2250738585072014e-308,
+          "k~v91680": 1,
+          "x98414": {
+            "m": {},
+            "€": [
+              1,
+              {},
+              42,
+              0.1
+            ],
+            "new12696": [],
+            "€66354": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-8",
+      "request": {
+        "baseline": {
+          "x": "a/b"
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-8-r0",
+            "preHash": "fd84e81123a1071f3cd7321c37cfc2c556d4af9f059dce7582c6e94c573103fd",
+            "postHash": "d8c69fcab742ffafb0956b2d7dba26508f6dbb0331446d27de283da7a3c113e4",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/x",
+                "value": [
+                  "a/b",
+                  3.141592653589793,
+                  {
+                    "k~v": 333333333.3333333,
+                    "": 2.2250738585072014e-308
+                  }
+                ]
+              },
+              {
+                "op": "copy",
+                "from": "/x/2/k~0v",
+                "path": "/new26945"
+              },
+              {
+                "op": "test",
+                "path": "/x/2/k~0v",
+                "value": 333333333.3333333
+              },
+              {
+                "op": "replace",
+                "path": "/new26945",
+                "value": 9007199254740992
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-8-r0"
+        ],
+        "postHashes": [
+          "d8c69fcab742ffafb0956b2d7dba26508f6dbb0331446d27de283da7a3c113e4"
+        ],
+        "finalHash": "d8c69fcab742ffafb0956b2d7dba26508f6dbb0331446d27de283da7a3c113e4",
+        "finalDocument": {
+          "x": [
+            "a/b",
+            3.141592653589793,
+            {
+              "k~v": 333333333.3333333,
+              "": 2.2250738585072014e-308
+            }
+          ],
+          "new26945": 9007199254740992
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-9",
+      "request": {
+        "baseline": {
+          "root": [
+            333333333.3333333,
+            -0.0
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-9-r0",
+            "preHash": "d28e7a841bd26a3b6cf8741d3e40d5a39e6b24423dfcca3de4a6b8bd488dba71",
+            "postHash": "573b9d8375f76dbea3adf8da37cd32ce73ab7be480b2f2fbaf4aacd87ceef750",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/root/1",
+                "path": "/a~1b32848"
+              },
+              {
+                "op": "move",
+                "from": "/root/1",
+                "path": "/root/-"
+              },
+              {
+                "op": "add",
+                "path": "/x23034",
+                "value": false
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-9-r1",
+            "preHash": "573b9d8375f76dbea3adf8da37cd32ce73ab7be480b2f2fbaf4aacd87ceef750",
+            "postHash": "633715420a0b372ff3df12344c6fef4bf7d476891a2f046f43df265bfe021485",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/x23034",
+                "path": "/root/2"
+              },
+              {
+                "op": "add",
+                "path": "/root/3",
+                "value": {}
+              },
+              {
+                "op": "copy",
+                "from": "/root/3",
+                "path": "/root/-"
+              },
+              {
+                "op": "add",
+                "path": "/root/4/a~1b24800",
+                "value": [
+                  [
+                    0.0
+                  ],
+                  false
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-9-r2",
+            "preHash": "633715420a0b372ff3df12344c6fef4bf7d476891a2f046f43df265bfe021485",
+            "postHash": "5c8406a37a8a1c2127f02cb6bad317dfdc1d9e76cd51be9b78c43b618172757a",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/a~1b51222",
+                "value": [
+                  [
+                    42,
+                    -1,
+                    0.0
+                  ],
+                  42,
+                  {
+                    "": 1e-27
+                  }
+                ]
+              },
+              {
+                "op": "remove",
+                "path": "/root"
+              },
+              {
+                "op": "test",
+                "path": "/a~1b51222/0/2",
+                "value": 0.0
+              },
+              {
+                "op": "move",
+                "from": "/a~1b51222/0/2",
+                "path": "/€33887"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-9-r3",
+            "preHash": "5c8406a37a8a1c2127f02cb6bad317dfdc1d9e76cd51be9b78c43b618172757a",
+            "postHash": "c45d35f1d98c91341eef3f35a9ccda65079fef8792b963f3a430621bb461d513",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/a~1b51222/0",
+                "path": "/a~1b51222/-"
+              },
+              {
+                "op": "add",
+                "path": "/a~1b51222/0/-",
+                "value": 333333333.3333333
+              },
+              {
+                "op": "add",
+                "path": "/a~1b51222/3/-",
+                "value": -9007199254740993
+              },
+              {
+                "op": "test",
+                "path": "/a~1b32848",
+                "value": -0.0
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-9-r4",
+            "preHash": "c45d35f1d98c91341eef3f35a9ccda65079fef8792b963f3a430621bb461d513",
+            "postHash": "93d28dc739a6697d318dd48987e15f03a578d4e9de602b56a6e89f410a8c4589",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/a~1b51222/3",
+                "path": "/a~1b51222/-"
+              },
+              {
+                "op": "replace",
+                "path": "/a~1b51222/0/1",
+                "value": [
+                  [
+                    14975.229192334073
+                  ]
+                ]
+              },
+              {
+                "op": "replace",
+                "path": "/a~1b32848",
+                "value": {}
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-9-r5",
+            "preHash": "93d28dc739a6697d318dd48987e15f03a578d4e9de602b56a6e89f410a8c4589",
+            "postHash": "a73e79e099a4472ccc824672d4dfdb9fd99e90dcb86b70f8240bada946258160",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/a~1b51222/1",
+                "value": [
+                  0,
+                  "back\\slash",
+                  3.141592653589793
+                ]
+              },
+              {
+                "op": "test",
+                "path": "/a~1b51222/3",
+                "value": {
+                  "": 1e-27
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-9-r0",
+          "fuzz-9-r1",
+          "fuzz-9-r2",
+          "fuzz-9-r3",
+          "fuzz-9-r4",
+          "fuzz-9-r5"
+        ],
+        "postHashes": [
+          "573b9d8375f76dbea3adf8da37cd32ce73ab7be480b2f2fbaf4aacd87ceef750",
+          "633715420a0b372ff3df12344c6fef4bf7d476891a2f046f43df265bfe021485",
+          "5c8406a37a8a1c2127f02cb6bad317dfdc1d9e76cd51be9b78c43b618172757a",
+          "c45d35f1d98c91341eef3f35a9ccda65079fef8792b963f3a430621bb461d513",
+          "93d28dc739a6697d318dd48987e15f03a578d4e9de602b56a6e89f410a8c4589",
+          "a73e79e099a4472ccc824672d4dfdb9fd99e90dcb86b70f8240bada946258160"
+        ],
+        "finalHash": "a73e79e099a4472ccc824672d4dfdb9fd99e90dcb86b70f8240bada946258160",
+        "finalDocument": {
+          "a/b32848": {},
+          "a/b51222": [
+            [
+              42,
+              [
+                [
+                  14975.229192334073
+                ]
+              ],
+              333333333.3333333
+            ],
+            [
+              0,
+              "back\\slash",
+              3.141592653589793
+            ],
+            42,
+            {
+              "": 1e-27
+            },
+            [
+              42,
+              -1,
+              -9007199254740993
+            ]
+          ],
+          "€33887": 0.0
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-10",
+      "request": {
+        "baseline": {
+          "x": 1e-27,
+          "n": {
+            "€": 745470.7065481496,
+            "k~v": "quote\"",
+            "a/b": -1e+17
+          }
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-10-r0",
+            "preHash": "49d9b506d204eaa9c3fa7e41a9c693cfe7943455c7467cf5f06cb8dcada6ee13",
+            "postHash": "26baf4828d488c0744642cf36f23d01ce4b66afd61a9a689d96e1c3f9015a3d9",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/n/a~1b",
+                "value": {}
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": 1e-27
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": 1e-27
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": 1e-27
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-10-r1",
+            "preHash": "26baf4828d488c0744642cf36f23d01ce4b66afd61a9a689d96e1c3f9015a3d9",
+            "postHash": "f0a1b7875844c3ae0d28f3cc44e9a6241da33e2623a69f0a71263158dffb4e87",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": 1e-27
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": 3.141592653589793
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-10-r2",
+            "preHash": "f0a1b7875844c3ae0d28f3cc44e9a6241da33e2623a69f0a71263158dffb4e87",
+            "postHash": "f0a1b7875844c3ae0d28f3cc44e9a6241da33e2623a69f0a71263158dffb4e87",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": 3.141592653589793
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-10-r3",
+            "preHash": "f0a1b7875844c3ae0d28f3cc44e9a6241da33e2623a69f0a71263158dffb4e87",
+            "postHash": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": 1
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-10-r4",
+            "preHash": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+            "postHash": "fe97df5722ece63320281d2eaeb052dab88bba7d2a9172396437a6d3aa0b9c13",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": []
+              },
+              {
+                "op": "add",
+                "path": "/-",
+                "value": [
+                  {
+                    "€": -1,
+                    "m": -1
+                  },
+                  "line\nbreak"
+                ]
+              },
+              {
+                "op": "add",
+                "path": "/0",
+                "value": {
+                  "😀": 0,
+                  "n": [
+                    1e-27,
+                    "k~v"
+                  ]
+                }
+              },
+              {
+                "op": "replace",
+                "path": "/0/n",
+                "value": [
+                  [
+                    -1,
+                    333333333.3333333
+                  ],
+                  {
+                    "😀": -1,
+                    "n": 1
+                  }
+                ]
+              },
+              {
+                "op": "move",
+                "from": "/0/n/0",
+                "path": "/1/-"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-10-r0",
+          "fuzz-10-r1",
+          "fuzz-10-r2",
+          "fuzz-10-r3",
+          "fuzz-10-r4"
+        ],
+        "postHashes": [
+          "26baf4828d488c0744642cf36f23d01ce4b66afd61a9a689d96e1c3f9015a3d9",
+          "f0a1b7875844c3ae0d28f3cc44e9a6241da33e2623a69f0a71263158dffb4e87",
+          "f0a1b7875844c3ae0d28f3cc44e9a6241da33e2623a69f0a71263158dffb4e87",
+          "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+          "fe97df5722ece63320281d2eaeb052dab88bba7d2a9172396437a6d3aa0b9c13"
+        ],
+        "finalHash": "fe97df5722ece63320281d2eaeb052dab88bba7d2a9172396437a6d3aa0b9c13",
+        "finalDocument": [
+          {
+            "😀": 0,
+            "n": [
+              {
+                "😀": -1,
+                "n": 1
+              }
+            ]
+          },
+          [
+            {
+              "€": -1,
+              "m": -1
+            },
+            "line\nbreak",
+            [
+              -1,
+              333333333.3333333
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fuzz-chain-11",
+      "request": {
+        "baseline": {
+          "root": 0
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-11-r0",
+            "preHash": "0ea4905f23961ee330a3cb0163240c8cc15e07e641a2a325670afc301cc25f7d",
+            "postHash": "e7fe25e1dea66a02240b91bbed562027d8721d109b798e047c012d1512043340",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": []
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": 42
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": {}
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {}
+              },
+              {
+                "op": "add",
+                "path": "/41404",
+                "value": {
+                  "a/b": false
+                }
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-11-r1",
+            "preHash": "e7fe25e1dea66a02240b91bbed562027d8721d109b798e047c012d1512043340",
+            "postHash": "e2e8231d1f3d630d1626087b2ba10f066ec8d2e60fa5960987b857cd7f649630",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/x92234",
+                "value": -1
+              },
+              {
+                "op": "replace",
+                "path": "/x92234",
+                "value": 0
+              },
+              {
+                "op": "remove",
+                "path": "/x92234"
+              },
+              {
+                "op": "copy",
+                "from": "/41404/a~1b",
+                "path": "/41404/€55354"
+              },
+              {
+                "op": "copy",
+                "from": "/41404/€55354",
+                "path": "/a~1b79"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-11-r2",
+            "preHash": "e2e8231d1f3d630d1626087b2ba10f066ec8d2e60fa5960987b857cd7f649630",
+            "postHash": "642527126fe50209d64849a3f55b36eeda9c28c15be6f098489bfb0c44658484",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/41404/x97623",
+                "value": true
+              },
+              {
+                "op": "test",
+                "path": "/41404/x97623",
+                "value": true
+              },
+              {
+                "op": "copy",
+                "from": "/41404/x97623",
+                "path": "/€38536"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-11-r3",
+            "preHash": "642527126fe50209d64849a3f55b36eeda9c28c15be6f098489bfb0c44658484",
+            "postHash": "4f56cc87fd0b8f6bfd22c829de33c9f5bc21549d755dd1cbeca502f4c00da769",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/a~1b82306",
+                "value": {
+                  "😀": true
+                }
+              },
+              {
+                "op": "move",
+                "from": "/€38536",
+                "path": "/k~0v9673"
+              },
+              {
+                "op": "replace",
+                "path": "/a~1b82306",
+                "value": {
+                  "k~v": {
+                    "k~v": false,
+                    "a/b": "x",
+                    "😀": 1e-27
+                  },
+                  "€": [
+                    "line\nbreak",
+                    1,
+                    1
+                  ]
+                }
+              },
+              {
+                "op": "test",
+                "path": "/41404/€55354",
+                "value": false
+              },
+              {
+                "op": "test",
+                "path": "/41404/x97623",
+                "value": true
+              },
+              {
+                "op": "move",
+                "from": "/41404/x97623",
+                "path": "/a~1b82306/a~1b5882"
+              },
+              {
+                "op": "copy",
+                "from": "/a~1b82306/€/1",
+                "path": "/a~1b82306/95538"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-11-r0",
+          "fuzz-11-r1",
+          "fuzz-11-r2",
+          "fuzz-11-r3"
+        ],
+        "postHashes": [
+          "e7fe25e1dea66a02240b91bbed562027d8721d109b798e047c012d1512043340",
+          "e2e8231d1f3d630d1626087b2ba10f066ec8d2e60fa5960987b857cd7f649630",
+          "642527126fe50209d64849a3f55b36eeda9c28c15be6f098489bfb0c44658484",
+          "4f56cc87fd0b8f6bfd22c829de33c9f5bc21549d755dd1cbeca502f4c00da769"
+        ],
+        "finalHash": "4f56cc87fd0b8f6bfd22c829de33c9f5bc21549d755dd1cbeca502f4c00da769",
+        "finalDocument": {
+          "41404": {
+            "a/b": false,
+            "€55354": false
+          },
+          "a/b79": false,
+          "a/b82306": {
+            "k~v": {
+              "k~v": false,
+              "a/b": "x",
+              "😀": 1e-27
+            },
+            "€": [
+              "line\nbreak",
+              1,
+              1
+            ],
+            "a/b5882": true,
+            "95538": 1
+          },
+          "k~v9673": true
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-12",
+      "request": {
+        "baseline": {
+          "root": [
+            [
+              false,
+              0.0
+            ],
+            {
+              "m": null,
+              "€": ""
+            }
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-12-r0",
+            "preHash": "369788237357da189eaecc5f8df725ce945db993905773ad666d425432dc762c",
+            "postHash": "68a7ad95a59a606dc929ec7abf6f9c58937f24f8633d8c84945701d66db19f50",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/root/1/€",
+                "path": "/root/1/k~0v63098"
+              },
+              {
+                "op": "remove",
+                "path": "/root/0/0"
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {
+                  "root": [
+                    [
+                      0.0
+                    ],
+                    {
+                      "m": null,
+                      "€": "",
+                      "k~v63098": ""
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "test",
+                "path": "/root/0/0",
+                "value": 0.0
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-12-r0"
+        ],
+        "postHashes": [
+          "68a7ad95a59a606dc929ec7abf6f9c58937f24f8633d8c84945701d66db19f50"
+        ],
+        "finalHash": "68a7ad95a59a606dc929ec7abf6f9c58937f24f8633d8c84945701d66db19f50",
+        "finalDocument": {
+          "root": [
+            [
+              0.0
+            ],
+            {
+              "m": null,
+              "€": "",
+              "k~v63098": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-13",
+      "request": {
+        "baseline": {
+          "root": [
+            {
+              "😀": false
+            },
+            [
+              true,
+              null
+            ]
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-13-r0",
+            "preHash": "a069a6a32d29fc804029fc77230b1f3d7795af2b961d27a6276e97e1ca92ca37",
+            "postHash": "61a9b8f04def056908a48cea55d1a5383764ad0e5e647f766276a66002bff1d4",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/root/0",
+                "path": "/root/0/19461"
+              },
+              {
+                "op": "copy",
+                "from": "/root/1/1",
+                "path": "/x57084"
+              },
+              {
+                "op": "move",
+                "from": "/root/0",
+                "path": "/root/-"
+              },
+              {
+                "op": "replace",
+                "path": "/root/1/19461/😀",
+                "value": true
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-13-r1",
+            "preHash": "61a9b8f04def056908a48cea55d1a5383764ad0e5e647f766276a66002bff1d4",
+            "postHash": "9f66be6d96141e79722d1a8716ce4192d309512eb3e8c520f5a4553918c3184c",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/root/1",
+                "value": {
+                  "😀": false,
+                  "19461": {
+                    "😀": true
+                  }
+                }
+              },
+              {
+                "op": "remove",
+                "path": "/root/1/19461"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-13-r2",
+            "preHash": "9f66be6d96141e79722d1a8716ce4192d309512eb3e8c520f5a4553918c3184c",
+            "postHash": "9f66be6d96141e79722d1a8716ce4192d309512eb3e8c520f5a4553918c3184c",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/root/0/1",
+                "value": "quote\""
+              },
+              {
+                "op": "remove",
+                "path": "/root/0/1"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-13-r3",
+            "preHash": "9f66be6d96141e79722d1a8716ce4192d309512eb3e8c520f5a4553918c3184c",
+            "postHash": "6323da7d1286556ae416d4b81f5fd85aa578a042603538fab7c177dd8a4ff711",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/x57084"
+              },
+              {
+                "op": "add",
+                "path": "/root/-",
+                "value": []
+              },
+              {
+                "op": "replace",
+                "path": "/root/1",
+                "value": 2.2250738585072014e-308
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-13-r4",
+            "preHash": "6323da7d1286556ae416d4b81f5fd85aa578a042603538fab7c177dd8a4ff711",
+            "postHash": "208fa7b3a2ecdc3a6ddf228768e513d02804f2b1eae0b0018d8e32a758844a9c",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/root/0",
+                "value": [
+                  true,
+                  null
+                ]
+              },
+              {
+                "op": "move",
+                "from": "/root/0/1",
+                "path": "/root/-"
+              },
+              {
+                "op": "add",
+                "path": "/root/2",
+                "value": "line\nbreak"
+              },
+              {
+                "op": "add",
+                "path": "/root/0/-",
+                "value": "k~v"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-13-r5",
+            "preHash": "208fa7b3a2ecdc3a6ddf228768e513d02804f2b1eae0b0018d8e32a758844a9c",
+            "postHash": "0efa5fe687bc5e2f76f6c0b01f17650f6040bfeefff3f503ff307bb2d79efa84",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/root",
+                "path": "/14590"
+              },
+              {
+                "op": "remove",
+                "path": "/root/0/0"
+              },
+              {
+                "op": "add",
+                "path": "/14590/3/-",
+                "value": {
+                  "😀": true,
+                  "€": {
+                    "n": 7
+                  }
+                }
+              },
+              {
+                "op": "replace",
+                "path": "/root/0",
+                "value": [
+                  {
+                    "m": null
+                  },
+                  null,
+                  []
+                ]
+              },
+              {
+                "op": "replace",
+                "path": "/root/2",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-13-r0",
+          "fuzz-13-r1",
+          "fuzz-13-r2",
+          "fuzz-13-r3",
+          "fuzz-13-r4",
+          "fuzz-13-r5"
+        ],
+        "postHashes": [
+          "61a9b8f04def056908a48cea55d1a5383764ad0e5e647f766276a66002bff1d4",
+          "9f66be6d96141e79722d1a8716ce4192d309512eb3e8c520f5a4553918c3184c",
+          "9f66be6d96141e79722d1a8716ce4192d309512eb3e8c520f5a4553918c3184c",
+          "6323da7d1286556ae416d4b81f5fd85aa578a042603538fab7c177dd8a4ff711",
+          "208fa7b3a2ecdc3a6ddf228768e513d02804f2b1eae0b0018d8e32a758844a9c",
+          "0efa5fe687bc5e2f76f6c0b01f17650f6040bfeefff3f503ff307bb2d79efa84"
+        ],
+        "finalHash": "0efa5fe687bc5e2f76f6c0b01f17650f6040bfeefff3f503ff307bb2d79efa84",
+        "finalDocument": {
+          "root": [
+            [
+              {
+                "m": null
+              },
+              null,
+              []
+            ],
+            2.2250738585072014e-308,
+            0.1,
+            [],
+            null
+          ],
+          "14590": [
+            [
+              true,
+              "k~v"
+            ],
+            2.2250738585072014e-308,
+            "line\nbreak",
+            [
+              {
+                "😀": true,
+                "€": {
+                  "n": 7
+                }
+              }
+            ],
+            null
+          ]
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-14",
+      "request": {
+        "baseline": {
+          "root": 703549.0754745825
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-14-r0",
+            "preHash": "fee2a70d66fe06dc6d29f2145a78556b7170c21b5786e1118cbc484e6773fd26",
+            "postHash": "e8db3b8fe0501db598d7083f5b6c82519e231838c28ebecfd4ec550cca42ac9f",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/root",
+                "path": "/€2238"
+              },
+              {
+                "op": "add",
+                "path": "/k~0v12631",
+                "value": "a/b"
+              },
+              {
+                "op": "remove",
+                "path": "/k~0v12631"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-14-r0"
+        ],
+        "postHashes": [
+          "e8db3b8fe0501db598d7083f5b6c82519e231838c28ebecfd4ec550cca42ac9f"
+        ],
+        "finalHash": "e8db3b8fe0501db598d7083f5b6c82519e231838c28ebecfd4ec550cca42ac9f",
+        "finalDocument": {
+          "root": 703549.0754745825,
+          "€2238": 703549.0754745825
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-15",
+      "request": {
+        "baseline": {
+          "root": -9007199254740993
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-15-r0",
+            "preHash": "41db5df7476463ae058fc4a3380afa0bf2bf9653239662f69cf82df035fe814f",
+            "postHash": "6909cda5191ebceee9b87900d2335c808c49270fc7e620d6d9bc594b70d6b6b0",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": {
+                  "": {}
+                }
+              },
+              {
+                "op": "add",
+                "path": "/x90776",
+                "value": "😀"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-15-r1",
+            "preHash": "6909cda5191ebceee9b87900d2335c808c49270fc7e620d6d9bc594b70d6b6b0",
+            "postHash": "8d51a73768cb59d15302f6b0a4c7147a04b0cce9df743b5bf50e31ab87b2d807",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": []
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": 2.2250738585072014e-308
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-15-r2",
+            "preHash": "8d51a73768cb59d15302f6b0a4c7147a04b0cce9df743b5bf50e31ab87b2d807",
+            "postHash": "94bf6478b41f10681c58a5cfc65fefed7c9a50df6104101869ca792bd7619da5",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": 2.2250738585072014e-308
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": 2.2250738585072014e-308
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": {
+                  "x": [
+                    -0.0,
+                    1e+30
+                  ],
+                  "k~v": false
+                }
+              },
+              {
+                "op": "remove",
+                "path": "/x/0"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-15-r0",
+          "fuzz-15-r1",
+          "fuzz-15-r2"
+        ],
+        "postHashes": [
+          "6909cda5191ebceee9b87900d2335c808c49270fc7e620d6d9bc594b70d6b6b0",
+          "8d51a73768cb59d15302f6b0a4c7147a04b0cce9df743b5bf50e31ab87b2d807",
+          "94bf6478b41f10681c58a5cfc65fefed7c9a50df6104101869ca792bd7619da5"
+        ],
+        "finalHash": "94bf6478b41f10681c58a5cfc65fefed7c9a50df6104101869ca792bd7619da5",
+        "finalDocument": {
+          "x": [
+            1e+30
+          ],
+          "k~v": false
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-16",
+      "request": {
+        "baseline": {
+          "root": [
+            {
+              "😀": "€"
+            },
+            0.0,
+            [
+              0,
+              true
+            ]
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-16-r0",
+            "preHash": "bae56100e25c952e247d2ec13d9bef767aeb4dee80455155a3c2e2f38d06d78b",
+            "postHash": "bc645350a48c9d7075efd0a800441b4404c69e42bd9c9cdd416b8fff2e672009",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root/1",
+                "path": "/root/-"
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {
+                  "root": [
+                    {
+                      "😀": "€"
+                    },
+                    [
+                      0,
+                      true
+                    ],
+                    0.0
+                  ]
+                }
+              },
+              {
+                "op": "replace",
+                "path": "/root/1/1",
+                "value": -10000000000.0
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-16-r1",
+            "preHash": "bc645350a48c9d7075efd0a800441b4404c69e42bd9c9cdd416b8fff2e672009",
+            "postHash": "c6baa068907c120b16b2e3b62af3c95b3ae815366f35ba10dfd9733bf57cc8bd",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root/0/😀",
+                "path": "/root/2"
+              },
+              {
+                "op": "copy",
+                "from": "/root/1/1",
+                "path": "/root/4"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-16-r2",
+            "preHash": "c6baa068907c120b16b2e3b62af3c95b3ae815366f35ba10dfd9733bf57cc8bd",
+            "postHash": "779528ba3206c349a2ecf72f0c391bd2beb5c7901e559707a585d52624fe7148",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/root/1/1",
+                "value": null
+              },
+              {
+                "op": "add",
+                "path": "/x68097",
+                "value": 333333333.3333333
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-16-r3",
+            "preHash": "779528ba3206c349a2ecf72f0c391bd2beb5c7901e559707a585d52624fe7148",
+            "postHash": "779528ba3206c349a2ecf72f0c391bd2beb5c7901e559707a585d52624fe7148",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/x68097",
+                "value": 333333333.3333333
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-16-r4",
+            "preHash": "779528ba3206c349a2ecf72f0c391bd2beb5c7901e559707a585d52624fe7148",
+            "postHash": "d792bf52b0e5f4cd0e2cf685fdac1d287053b1df04f73cc3a07c00801267a3f9",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root/1/0",
+                "path": "/root/0"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-16-r5",
+            "preHash": "d792bf52b0e5f4cd0e2cf685fdac1d287053b1df04f73cc3a07c00801267a3f9",
+            "postHash": "5b748ffc85a62b7e61bc2b926b596e1277b16149e586c03ec74362f65d1a267e",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/x68097",
+                "value": {
+                  "😀": [
+                    3.141592653589793,
+                    -1
+                  ]
+                }
+              },
+              {
+                "op": "copy",
+                "from": "/x68097/😀",
+                "path": "/x68097/😀/1"
+              },
+              {
+                "op": "test",
+                "path": "/root/3",
+                "value": "€"
+              },
+              {
+                "op": "replace",
+                "path": "/root",
+                "value": true
+              },
+              {
+                "op": "replace",
+                "path": "/root",
+                "value": {}
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-16-r6",
+            "preHash": "5b748ffc85a62b7e61bc2b926b596e1277b16149e586c03ec74362f65d1a267e",
+            "postHash": "528fba0d54915f761c511e866d8c50af96f33ee029d9f24a3d0aa01d0378697d",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/a~1b98248",
+                "value": [
+                  [
+                    false
+                  ],
+                  3.141592653589793,
+                  [
+                    -1,
+                    "quote\"",
+                    3.141592653589793
+                  ]
+                ]
+              },
+              {
+                "op": "replace",
+                "path": "/root",
+                "value": []
+              },
+              {
+                "op": "add",
+                "path": "/a~1b98248/-",
+                "value": 1e-27
+              },
+              {
+                "op": "test",
+                "path": "/root",
+                "value": []
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-16-r0",
+          "fuzz-16-r1",
+          "fuzz-16-r2",
+          "fuzz-16-r3",
+          "fuzz-16-r4",
+          "fuzz-16-r5",
+          "fuzz-16-r6"
+        ],
+        "postHashes": [
+          "bc645350a48c9d7075efd0a800441b4404c69e42bd9c9cdd416b8fff2e672009",
+          "c6baa068907c120b16b2e3b62af3c95b3ae815366f35ba10dfd9733bf57cc8bd",
+          "779528ba3206c349a2ecf72f0c391bd2beb5c7901e559707a585d52624fe7148",
+          "779528ba3206c349a2ecf72f0c391bd2beb5c7901e559707a585d52624fe7148",
+          "d792bf52b0e5f4cd0e2cf685fdac1d287053b1df04f73cc3a07c00801267a3f9",
+          "5b748ffc85a62b7e61bc2b926b596e1277b16149e586c03ec74362f65d1a267e",
+          "528fba0d54915f761c511e866d8c50af96f33ee029d9f24a3d0aa01d0378697d"
+        ],
+        "finalHash": "528fba0d54915f761c511e866d8c50af96f33ee029d9f24a3d0aa01d0378697d",
+        "finalDocument": {
+          "root": [],
+          "x68097": {
+            "😀": [
+              3.141592653589793,
+              [
+                3.141592653589793,
+                -1
+              ],
+              -1
+            ]
+          },
+          "a/b98248": [
+            [
+              false
+            ],
+            3.141592653589793,
+            [
+              -1,
+              "quote\"",
+              3.141592653589793
+            ],
+            1e-27
+          ]
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-17",
+      "request": {
+        "baseline": {
+          "😀": 0.1
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-17-r0",
+            "preHash": "d985f02ca7509276b3907e2e1d24d184a34b3279b14191ecaf28b00525859c19",
+            "postHash": "7e7522c2337ecb699f7a3bf44300dab04c6a7ac650cf0599ab9d48197efab87f",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/😀",
+                "path": "/a~1b41236"
+              },
+              {
+                "op": "replace",
+                "path": "/a~1b41236",
+                "value": [
+                  "x",
+                  {
+                    "k~v": "tab\tend",
+                    "x": null
+                  }
+                ]
+              },
+              {
+                "op": "test",
+                "path": "/a~1b41236/0",
+                "value": "x"
+              },
+              {
+                "op": "replace",
+                "path": "/a~1b41236/1/x",
+                "value": -1000000000.0
+              },
+              {
+                "op": "copy",
+                "from": "/a~1b41236/0",
+                "path": "/€45746"
+              },
+              {
+                "op": "copy",
+                "from": "/😀",
+                "path": "/a~1b41236/1/€99472"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-17-r1",
+            "preHash": "7e7522c2337ecb699f7a3bf44300dab04c6a7ac650cf0599ab9d48197efab87f",
+            "postHash": "2f7a7860dd03d89f1facbf51529f3b51cdadb9aa061218cc3c605ec4d302f388",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/a~1b41236/1/€99472",
+                "path": "/x26578"
+              },
+              {
+                "op": "test",
+                "path": "/a~1b41236",
+                "value": [
+                  "x",
+                  {
+                    "k~v": "tab\tend",
+                    "x": -1000000000.0
+                  }
+                ]
+              },
+              {
+                "op": "move",
+                "from": "/x26578",
+                "path": "/a~1b41236/2"
+              },
+              {
+                "op": "remove",
+                "path": "/a~1b41236"
+              },
+              {
+                "op": "test",
+                "path": "/😀",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-17-r2",
+            "preHash": "2f7a7860dd03d89f1facbf51529f3b51cdadb9aa061218cc3c605ec4d302f388",
+            "postHash": "f22f0f9cfb4463b9993a4476fcd8ba7e32512705e636827f2029d4062717e4c2",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/86815",
+                "value": {
+                  "": 0,
+                  "k~v": 0.1
+                }
+              },
+              {
+                "op": "test",
+                "path": "/86815/",
+                "value": 0
+              },
+              {
+                "op": "move",
+                "from": "/😀",
+                "path": "/86815/a~1b67173"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-17-r3",
+            "preHash": "f22f0f9cfb4463b9993a4476fcd8ba7e32512705e636827f2029d4062717e4c2",
+            "postHash": "9bdb19280fe7ae70947ba10b986a2eaef8ac5dab0b8b97a4e2a9e18918a35080",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/86815/k~0v",
+                "path": "/86815/new81746"
+              },
+              {
+                "op": "test",
+                "path": "/86815/new81746",
+                "value": 0.1
+              },
+              {
+                "op": "remove",
+                "path": "/86815/"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-17-r4",
+            "preHash": "9bdb19280fe7ae70947ba10b986a2eaef8ac5dab0b8b97a4e2a9e18918a35080",
+            "postHash": "a5d19480aa94599bb44c6b806144b04f8a5711b81e814e8760f09ee39c4440fa",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/86815",
+                "path": "/86815/x4397"
+              },
+              {
+                "op": "remove",
+                "path": "/86815/x4397"
+              },
+              {
+                "op": "add",
+                "path": "/€92751",
+                "value": [
+                  {
+                    "x": null,
+                    "m": "tab\tend"
+                  },
+                  {
+                    "€": 3.141592653589793
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-17-r5",
+            "preHash": "a5d19480aa94599bb44c6b806144b04f8a5711b81e814e8760f09ee39c4440fa",
+            "postHash": "932101dee90e04dc5b3f42f3941cd4cdad55b282da77e570ab090fa73608d5b6",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/€92751/0/x",
+                "path": "/€92751/1/a~1b37103"
+              },
+              {
+                "op": "remove",
+                "path": "/86815/k~0v"
+              },
+              {
+                "op": "replace",
+                "path": "/€92751/1/€",
+                "value": [
+                  333333333.3333333
+                ]
+              },
+              {
+                "op": "replace",
+                "path": "/€92751/1/a~1b37103",
+                "value": []
+              },
+              {
+                "op": "add",
+                "path": "/86815/€35044",
+                "value": {
+                  "": false
+                }
+              },
+              {
+                "op": "remove",
+                "path": "/€92751/1/a~1b37103"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-17-r6",
+            "preHash": "932101dee90e04dc5b3f42f3941cd4cdad55b282da77e570ab090fa73608d5b6",
+            "postHash": "58d9b90d9360e24d3ac625125e92e582dd3a12abec0afb56d259b43a913d2129",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/€92751/1/€/-",
+                "value": 333333333.3333333
+              },
+              {
+                "op": "remove",
+                "path": "/€92751/1"
+              },
+              {
+                "op": "add",
+                "path": "/86815/€35044/new31860",
+                "value": 0.1
+              },
+              {
+                "op": "copy",
+                "from": "/86815/€35044",
+                "path": "/€92751/0/€71942"
+              },
+              {
+                "op": "move",
+                "from": "/€92751",
+                "path": "/86815/€35044/58422"
+              },
+              {
+                "op": "add",
+                "path": "/new12009",
+                "value": [
+                  {
+                    "n": 42
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-17-r0",
+          "fuzz-17-r1",
+          "fuzz-17-r2",
+          "fuzz-17-r3",
+          "fuzz-17-r4",
+          "fuzz-17-r5",
+          "fuzz-17-r6"
+        ],
+        "postHashes": [
+          "7e7522c2337ecb699f7a3bf44300dab04c6a7ac650cf0599ab9d48197efab87f",
+          "2f7a7860dd03d89f1facbf51529f3b51cdadb9aa061218cc3c605ec4d302f388",
+          "f22f0f9cfb4463b9993a4476fcd8ba7e32512705e636827f2029d4062717e4c2",
+          "9bdb19280fe7ae70947ba10b986a2eaef8ac5dab0b8b97a4e2a9e18918a35080",
+          "a5d19480aa94599bb44c6b806144b04f8a5711b81e814e8760f09ee39c4440fa",
+          "932101dee90e04dc5b3f42f3941cd4cdad55b282da77e570ab090fa73608d5b6",
+          "58d9b90d9360e24d3ac625125e92e582dd3a12abec0afb56d259b43a913d2129"
+        ],
+        "finalHash": "58d9b90d9360e24d3ac625125e92e582dd3a12abec0afb56d259b43a913d2129",
+        "finalDocument": {
+          "€45746": "x",
+          "86815": {
+            "a/b67173": 0.1,
+            "new81746": 0.1,
+            "€35044": {
+              "": false,
+              "new31860": 0.1,
+              "58422": [
+                {
+                  "m": "tab\tend",
+                  "€71942": {
+                    "": false,
+                    "new31860": 0.1
+                  }
+                }
+              ]
+            }
+          },
+          "new12009": [
+            {
+              "n": 42
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-18",
+      "request": {
+        "baseline": {
+          "a/b": null
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-18-r0",
+            "preHash": "4e6d253c1e7fc4d2c834bf705dd5143181c431f6f931a749a1e0446f629bc5ff",
+            "postHash": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/a~1b",
+                "path": "/€40139"
+              },
+              {
+                "op": "replace",
+                "path": "/€40139",
+                "value": -0.0
+              },
+              {
+                "op": "move",
+                "from": "/a~1b",
+                "path": "/new4371"
+              },
+              {
+                "op": "remove",
+                "path": "/€40139"
+              },
+              {
+                "op": "remove",
+                "path": "/new4371"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": true
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-18-r1",
+            "preHash": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+            "postHash": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": 0.0
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": "back\\slash"
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": "back\\slash"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-18-r0",
+          "fuzz-18-r1"
+        ],
+        "postHashes": [
+          "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+          "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        ],
+        "finalHash": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+        "finalDocument": true
+      }
+    },
+    {
+      "name": "fuzz-chain-19",
+      "request": {
+        "baseline": {
+          "😀": 0.0
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-19-r0",
+            "preHash": "c8ba76b40f8b27498d58498915315c525bfa2fb860e04d9917e17105496ac061",
+            "postHash": "3f66dd705ebb5ce9d88713ea442b99990aec5842168c6d7a856dfd60e9c1416d",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/😀",
+                "path": "/k~0v47461"
+              },
+              {
+                "op": "move",
+                "from": "/k~0v47461",
+                "path": "/x19737"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": "k~v"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-19-r1",
+            "preHash": "3f66dd705ebb5ce9d88713ea442b99990aec5842168c6d7a856dfd60e9c1416d",
+            "postHash": "34018a23946d404e7b5ccfe24f280817f53e5ab9d60ff281f98d953e0624d38b",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": {}
+              },
+              {
+                "op": "add",
+                "path": "/8751",
+                "value": [
+                  9007199254740992,
+                  {
+                    "a/b": -9007199254740993
+                  },
+                  [
+                    2.2250738585072014e-308,
+                    333333333.3333333
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-19-r2",
+            "preHash": "34018a23946d404e7b5ccfe24f280817f53e5ab9d60ff281f98d953e0624d38b",
+            "postHash": "98907b7e8b112a74f57f0a7bee5eac53eb5a67c1a5aa3565262e24a9329ddca3",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/8751/1/a~1b"
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {
+                  "8751": [
+                    9007199254740992,
+                    {},
+                    [
+                      2.2250738585072014e-308,
+                      333333333.3333333
+                    ]
+                  ]
+                }
+              },
+              {
+                "op": "add",
+                "path": "/91875",
+                "value": -9007199254740993
+              },
+              {
+                "op": "copy",
+                "from": "/8751/2/0",
+                "path": "/8751/1/28876"
+              },
+              {
+                "op": "test",
+                "path": "/8751/2",
+                "value": [
+                  2.2250738585072014e-308,
+                  333333333.3333333
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-19-r3",
+            "preHash": "98907b7e8b112a74f57f0a7bee5eac53eb5a67c1a5aa3565262e24a9329ddca3",
+            "postHash": "59e7c9f9af14fa60b8f2c3431ea68b67364e9d3d28eb189805887b8cf3d6915e",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/k~0v49245",
+                "value": -10000.0
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-19-r0",
+          "fuzz-19-r1",
+          "fuzz-19-r2",
+          "fuzz-19-r3"
+        ],
+        "postHashes": [
+          "3f66dd705ebb5ce9d88713ea442b99990aec5842168c6d7a856dfd60e9c1416d",
+          "34018a23946d404e7b5ccfe24f280817f53e5ab9d60ff281f98d953e0624d38b",
+          "98907b7e8b112a74f57f0a7bee5eac53eb5a67c1a5aa3565262e24a9329ddca3",
+          "59e7c9f9af14fa60b8f2c3431ea68b67364e9d3d28eb189805887b8cf3d6915e"
+        ],
+        "finalHash": "59e7c9f9af14fa60b8f2c3431ea68b67364e9d3d28eb189805887b8cf3d6915e",
+        "finalDocument": {
+          "8751": [
+            9007199254740992,
+            {
+              "28876": 2.2250738585072014e-308
+            },
+            [
+              2.2250738585072014e-308,
+              333333333.3333333
+            ]
+          ],
+          "91875": -9007199254740993,
+          "k~v49245": -10000.0
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-20",
+      "request": {
+        "baseline": {
+          "root": 545375.9985482416
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-20-r0",
+            "preHash": "98a37e1c456249807851bc4c9f37b1b2ebff6bf0cf1b2426a0aae98e0c3a7918",
+            "postHash": "eb1f00c987496bd80d95cd61e966961d0ae26cf24979f68ca4b266ff00682ab6",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/k~0v65320"
+              },
+              {
+                "op": "replace",
+                "path": "/k~0v65320",
+                "value": {
+                  "€": {
+                    "m": "k~v"
+                  },
+                  "": {
+                    "m": "back\\slash",
+                    "😀": "k~v"
+                  },
+                  "n": [
+                    9007199254740992
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-20-r1",
+            "preHash": "eb1f00c987496bd80d95cd61e966961d0ae26cf24979f68ca4b266ff00682ab6",
+            "postHash": "39518ccdbd5222b6327a3a5cccbc803b55e1e41d543f16a503605a7b2975b874",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/k~0v65320/€/m",
+                "path": "/k~0v65320//x12677"
+              },
+              {
+                "op": "test",
+                "path": "/k~0v65320//m",
+                "value": "back\\slash"
+              },
+              {
+                "op": "remove",
+                "path": "/k~0v65320/n/0"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-20-r2",
+            "preHash": "39518ccdbd5222b6327a3a5cccbc803b55e1e41d543f16a503605a7b2975b874",
+            "postHash": "4d9973aa2ee554807547694f6e4516221630f5c3affb03065601aed069ab8f9a",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/k~0v65320/n",
+                "value": []
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": {
+                  "€": "quote\""
+                }
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-20-r3",
+            "preHash": "4d9973aa2ee554807547694f6e4516221630f5c3affb03065601aed069ab8f9a",
+            "postHash": "ce914ccabfb38725e239f5622a1cd21d99d737953a598f66fdbb57427fc9e7cb",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/€",
+                "path": "/€91320"
+              },
+              {
+                "op": "move",
+                "from": "/€91320",
+                "path": "/x53882"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-20-r4",
+            "preHash": "ce914ccabfb38725e239f5622a1cd21d99d737953a598f66fdbb57427fc9e7cb",
+            "postHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/€36102",
+                "value": 2.2250738585072014e-308
+              },
+              {
+                "op": "copy",
+                "from": "/€36102",
+                "path": "/new57789"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": null
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-20-r5",
+            "preHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "postHash": "8d51a73768cb59d15302f6b0a4c7147a04b0cce9df743b5bf50e31ab87b2d807",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": null
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": 2.2250738585072014e-308
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-20-r0",
+          "fuzz-20-r1",
+          "fuzz-20-r2",
+          "fuzz-20-r3",
+          "fuzz-20-r4",
+          "fuzz-20-r5"
+        ],
+        "postHashes": [
+          "eb1f00c987496bd80d95cd61e966961d0ae26cf24979f68ca4b266ff00682ab6",
+          "39518ccdbd5222b6327a3a5cccbc803b55e1e41d543f16a503605a7b2975b874",
+          "4d9973aa2ee554807547694f6e4516221630f5c3affb03065601aed069ab8f9a",
+          "ce914ccabfb38725e239f5622a1cd21d99d737953a598f66fdbb57427fc9e7cb",
+          "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "8d51a73768cb59d15302f6b0a4c7147a04b0cce9df743b5bf50e31ab87b2d807"
+        ],
+        "finalHash": "8d51a73768cb59d15302f6b0a4c7147a04b0cce9df743b5bf50e31ab87b2d807",
+        "finalDocument": 2.2250738585072014e-308
+      }
+    },
+    {
+      "name": "fuzz-chain-21",
+      "request": {
+        "baseline": {
+          "m": {
+            "n": false,
+            "k~v": "😀",
+            "a/b": true
+          },
+          "x": "line\nbreak",
+          "k~v": {
+            "€": 3.141592653589793,
+            "k~v": true
+          }
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-21-r0",
+            "preHash": "111ce39d1a6bb80a97c7bc7912fe3fd4d58387a294ebc52f5e78e44e7c977a5a",
+            "postHash": "3133aee351857e4d85ecd4540caec5cebbdba7c316dd04e97e5afec0ec815a37",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/m/x47722",
+                "value": [
+                  [
+                    1,
+                    2.2250738585072014e-308,
+                    "😀"
+                  ],
+                  [
+                    "😀"
+                  ],
+                  903531.6396421223
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-21-r1",
+            "preHash": "3133aee351857e4d85ecd4540caec5cebbdba7c316dd04e97e5afec0ec815a37",
+            "postHash": "111ce39d1a6bb80a97c7bc7912fe3fd4d58387a294ebc52f5e78e44e7c977a5a",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/m/x47722/0/-",
+                "value": 0.1
+              },
+              {
+                "op": "remove",
+                "path": "/m/x47722/1"
+              },
+              {
+                "op": "remove",
+                "path": "/m/x47722"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-21-r2",
+            "preHash": "111ce39d1a6bb80a97c7bc7912fe3fd4d58387a294ebc52f5e78e44e7c977a5a",
+            "postHash": "9ebc40d087b882f06da4f47e2fdd1c13244a0576925f8c89e214365d65927a5f",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/k~0v/k~0v"
+              },
+              {
+                "op": "copy",
+                "from": "/k~0v/€",
+                "path": "/k~0v/a~1b44122"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-21-r3",
+            "preHash": "9ebc40d087b882f06da4f47e2fdd1c13244a0576925f8c89e214365d65927a5f",
+            "postHash": "af24fb8d4cd943f8951b807892459663814fdd646088cd042b70afc497406a86",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/k~0v81463",
+                "value": "a/b"
+              },
+              {
+                "op": "move",
+                "from": "/k~0v",
+                "path": "/a~1b84117"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-21-r4",
+            "preHash": "af24fb8d4cd943f8951b807892459663814fdd646088cd042b70afc497406a86",
+            "postHash": "52cbd793feed32a63276e2664b8aa5ca865db0b7d5a6953bafd04e720345484e",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/a~1b84117/€",
+                "value": 3.141592653589793
+              },
+              {
+                "op": "copy",
+                "from": "/m",
+                "path": "/m/k~0v32835"
+              },
+              {
+                "op": "test",
+                "path": "/a~1b84117",
+                "value": {
+                  "€": 3.141592653589793,
+                  "a/b44122": 3.141592653589793
+                }
+              },
+              {
+                "op": "replace",
+                "path": "/m",
+                "value": 299935.55912885896
+              },
+              {
+                "op": "test",
+                "path": "/a~1b84117/€",
+                "value": 3.141592653589793
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-21-r5",
+            "preHash": "52cbd793feed32a63276e2664b8aa5ca865db0b7d5a6953bafd04e720345484e",
+            "postHash": "7a2011e97fab57ed7695c689436493ea615c9062c131fe36a5c23e2a4a205629",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/a~1b84117/a~1b44122",
+                "value": {}
+              },
+              {
+                "op": "copy",
+                "from": "/a~1b84117/€",
+                "path": "/a~1b84117/a~1b44122/x54197"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-21-r6",
+            "preHash": "7a2011e97fab57ed7695c689436493ea615c9062c131fe36a5c23e2a4a205629",
+            "postHash": "6344fcf3781d633c52779b6d8aa03567ad931ff1e7db6a740550723209684924",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/a~1b84117/x79978",
+                "value": [
+                  {
+                    "a/b": "back\\slash",
+                    "": 42
+                  },
+                  true
+                ]
+              },
+              {
+                "op": "test",
+                "path": "/k~0v81463",
+                "value": "a/b"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-21-r0",
+          "fuzz-21-r1",
+          "fuzz-21-r2",
+          "fuzz-21-r3",
+          "fuzz-21-r4",
+          "fuzz-21-r5",
+          "fuzz-21-r6"
+        ],
+        "postHashes": [
+          "3133aee351857e4d85ecd4540caec5cebbdba7c316dd04e97e5afec0ec815a37",
+          "111ce39d1a6bb80a97c7bc7912fe3fd4d58387a294ebc52f5e78e44e7c977a5a",
+          "9ebc40d087b882f06da4f47e2fdd1c13244a0576925f8c89e214365d65927a5f",
+          "af24fb8d4cd943f8951b807892459663814fdd646088cd042b70afc497406a86",
+          "52cbd793feed32a63276e2664b8aa5ca865db0b7d5a6953bafd04e720345484e",
+          "7a2011e97fab57ed7695c689436493ea615c9062c131fe36a5c23e2a4a205629",
+          "6344fcf3781d633c52779b6d8aa03567ad931ff1e7db6a740550723209684924"
+        ],
+        "finalHash": "6344fcf3781d633c52779b6d8aa03567ad931ff1e7db6a740550723209684924",
+        "finalDocument": {
+          "m": 299935.55912885896,
+          "x": "line\nbreak",
+          "k~v81463": "a/b",
+          "a/b84117": {
+            "€": 3.141592653589793,
+            "a/b44122": {
+              "x54197": 3.141592653589793
+            },
+            "x79978": [
+              {
+                "a/b": "back\\slash",
+                "": 42
+              },
+              true
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-22",
+      "request": {
+        "baseline": {
+          "root": 1e-27
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-22-r0",
+            "preHash": "9ea0feff1db47cfabd04cc9e0771bde2b32c8eefaa4f617521035819582962e8",
+            "postHash": "2875144c3867d8b86a88e7812e040ca73fe0c1de3e1d743b6ec9383a2de47922",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/x19701"
+              },
+              {
+                "op": "copy",
+                "from": "/x19701",
+                "path": "/k~0v70704"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-22-r0"
+        ],
+        "postHashes": [
+          "2875144c3867d8b86a88e7812e040ca73fe0c1de3e1d743b6ec9383a2de47922"
+        ],
+        "finalHash": "2875144c3867d8b86a88e7812e040ca73fe0c1de3e1d743b6ec9383a2de47922",
+        "finalDocument": {
+          "x19701": 1e-27,
+          "k~v70704": 1e-27
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-23",
+      "request": {
+        "baseline": {
+          "root": -1
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-23-r0",
+            "preHash": "0f73aca1b4051975c7ef923a74fedc0fb95081d5f34269b44d597992f3bc5c9b",
+            "postHash": "0caa1ddc4f97c884ea7a0dd0fac2a2b48eb378b58da71fff937b36e0856d72a7",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/59791",
+                "value": [
+                  {
+                    "n": null,
+                    "€": true,
+                    "a/b": "back\\slash"
+                  },
+                  {},
+                  -1
+                ]
+              },
+              {
+                "op": "move",
+                "from": "/59791/0/a~1b",
+                "path": "/59791/0/k~0v8895"
+              },
+              {
+                "op": "test",
+                "path": "/59791",
+                "value": [
+                  {
+                    "n": null,
+                    "€": true,
+                    "k~v8895": "back\\slash"
+                  },
+                  {},
+                  -1
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-23-r1",
+            "preHash": "0caa1ddc4f97c884ea7a0dd0fac2a2b48eb378b58da71fff937b36e0856d72a7",
+            "postHash": "8114221b1f6be09a8044e4bccf178d8975004b78a40b517ef3330557dc25d06d",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/59791/0/€",
+                "path": "/59791/1"
+              },
+              {
+                "op": "test",
+                "path": "/59791/0",
+                "value": {
+                  "n": null,
+                  "k~v8895": "back\\slash"
+                }
+              },
+              {
+                "op": "move",
+                "from": "/59791/0/n",
+                "path": "/59791/2/x80970"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-23-r2",
+            "preHash": "8114221b1f6be09a8044e4bccf178d8975004b78a40b517ef3330557dc25d06d",
+            "postHash": "5d185b7b0c855be5ecee72d323bf7120c3c5791bddfcc105229f774cb711845d",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/59791",
+                "path": "/59791/0/new71629"
+              },
+              {
+                "op": "remove",
+                "path": "/59791/0/new71629/2/x80970"
+              },
+              {
+                "op": "test",
+                "path": "/59791",
+                "value": [
+                  {
+                    "k~v8895": "back\\slash",
+                    "new71629": [
+                      {
+                        "k~v8895": "back\\slash"
+                      },
+                      true,
+                      {},
+                      -1
+                    ]
+                  },
+                  true,
+                  {
+                    "x80970": null
+                  },
+                  -1
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-23-r3",
+            "preHash": "5d185b7b0c855be5ecee72d323bf7120c3c5791bddfcc105229f774cb711845d",
+            "postHash": "515d8bfc80b0b52aab7522c4974790a3940f15c33c4539d5debaa75c047058ea",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/59791/0/€41362",
+                "value": []
+              },
+              {
+                "op": "remove",
+                "path": "/59791/0/new71629/1"
+              },
+              {
+                "op": "copy",
+                "from": "/59791/0/k~0v8895",
+                "path": "/59791/0/new71629/-"
+              },
+              {
+                "op": "replace",
+                "path": "/59791/0/new71629/0",
+                "value": []
+              },
+              {
+                "op": "remove",
+                "path": "/root"
+              },
+              {
+                "op": "add",
+                "path": "/59791/0/new71629/0/-",
+                "value": 42
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-23-r4",
+            "preHash": "515d8bfc80b0b52aab7522c4974790a3940f15c33c4539d5debaa75c047058ea",
+            "postHash": "590a3d72bb3db207f9ffcc87eceab28ff1c4becff82001d8240948a2339fc44b",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/59791/0/new71629/0/1",
+                "value": [
+                  [
+                    "x",
+                    -1,
+                    -1
+                  ]
+                ]
+              },
+              {
+                "op": "copy",
+                "from": "/59791/0/k~0v8895",
+                "path": "/59791/0/new71629/0/1/-"
+              },
+              {
+                "op": "add",
+                "path": "/59791/0/a~1b5792",
+                "value": [
+                  -1,
+                  {
+                    "m": -9007199254740993,
+                    "n": -9007199254740993
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-23-r5",
+            "preHash": "590a3d72bb3db207f9ffcc87eceab28ff1c4becff82001d8240948a2339fc44b",
+            "postHash": "79317862b35fa93abf113f5f07b86589da1535d9e6f474ff6cc2d2873f7bbaea",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/59791/0/new71629/0/2",
+                "value": {
+                  "a/b": -1,
+                  "€": {},
+                  "x": [
+                    true,
+                    false,
+                    "tab\tend"
+                  ]
+                }
+              },
+              {
+                "op": "remove",
+                "path": "/59791/2"
+              },
+              {
+                "op": "copy",
+                "from": "/59791/0/a~1b5792/1/n",
+                "path": "/59791/0/new71629/0/2/€/x26825"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-23-r6",
+            "preHash": "79317862b35fa93abf113f5f07b86589da1535d9e6f474ff6cc2d2873f7bbaea",
+            "postHash": "2bb3b71b22b5dbf421d13a57196f4ed3fae85683ded97cf4e2199236b2e9dd9d",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/59791/0/new71629/3",
+                "value": {
+                  "😀": "line\nbreak"
+                }
+              },
+              {
+                "op": "replace",
+                "path": "/59791/0/new71629",
+                "value": false
+              },
+              {
+                "op": "test",
+                "path": "/59791/0",
+                "value": {
+                  "k~v8895": "back\\slash",
+                  "new71629": false,
+                  "€41362": [],
+                  "a/b5792": [
+                    -1,
+                    {
+                      "m": -9007199254740993,
+                      "n": -9007199254740993
+                    }
+                  ]
+                }
+              },
+              {
+                "op": "add",
+                "path": "/59791/0/€41362/-",
+                "value": true
+              },
+              {
+                "op": "move",
+                "from": "/59791/0/a~1b5792/1/m",
+                "path": "/k~0v8715"
+              },
+              {
+                "op": "remove",
+                "path": "/59791/2"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-23-r0",
+          "fuzz-23-r1",
+          "fuzz-23-r2",
+          "fuzz-23-r3",
+          "fuzz-23-r4",
+          "fuzz-23-r5",
+          "fuzz-23-r6"
+        ],
+        "postHashes": [
+          "0caa1ddc4f97c884ea7a0dd0fac2a2b48eb378b58da71fff937b36e0856d72a7",
+          "8114221b1f6be09a8044e4bccf178d8975004b78a40b517ef3330557dc25d06d",
+          "5d185b7b0c855be5ecee72d323bf7120c3c5791bddfcc105229f774cb711845d",
+          "515d8bfc80b0b52aab7522c4974790a3940f15c33c4539d5debaa75c047058ea",
+          "590a3d72bb3db207f9ffcc87eceab28ff1c4becff82001d8240948a2339fc44b",
+          "79317862b35fa93abf113f5f07b86589da1535d9e6f474ff6cc2d2873f7bbaea",
+          "2bb3b71b22b5dbf421d13a57196f4ed3fae85683ded97cf4e2199236b2e9dd9d"
+        ],
+        "finalHash": "2bb3b71b22b5dbf421d13a57196f4ed3fae85683ded97cf4e2199236b2e9dd9d",
+        "finalDocument": {
+          "59791": [
+            {
+              "k~v8895": "back\\slash",
+              "new71629": false,
+              "€41362": [
+                true
+              ],
+              "a/b5792": [
+                -1,
+                {
+                  "n": -9007199254740993
+                }
+              ]
+            },
+            true
+          ],
+          "k~v8715": -9007199254740993
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-24",
+      "request": {
+        "baseline": {
+          "root": [
+            [
+              3.141592653589793,
+              42
+            ],
+            3.141592653589793,
+            [
+              "back\\slash",
+              3.141592653589793,
+              1
+            ]
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-24-r0",
+            "preHash": "be40332c161443744846ae0ecaa237a9e648dec4ef403b177e3d267892d45c12",
+            "postHash": "f22b479d95a7d1ff2f0b33e9353cf9baf4d4f537f08c951209d8fa184599c28c",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root/2/2",
+                "path": "/root/0"
+              },
+              {
+                "op": "add",
+                "path": "/root/1/-",
+                "value": [
+                  2.2250738585072014e-308
+                ]
+              },
+              {
+                "op": "remove",
+                "path": "/root/1"
+              },
+              {
+                "op": "add",
+                "path": "/3692",
+                "value": {
+                  "😀": []
+                }
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-24-r1",
+            "preHash": "f22b479d95a7d1ff2f0b33e9353cf9baf4d4f537f08c951209d8fa184599c28c",
+            "postHash": "30cb26586913af40ea6ba908391333a0354ceee032a0ef5093f6e61e8c001bd1",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/root/2/0",
+                "value": -9007199254740993
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-24-r0",
+          "fuzz-24-r1"
+        ],
+        "postHashes": [
+          "f22b479d95a7d1ff2f0b33e9353cf9baf4d4f537f08c951209d8fa184599c28c",
+          "30cb26586913af40ea6ba908391333a0354ceee032a0ef5093f6e61e8c001bd1"
+        ],
+        "finalHash": "30cb26586913af40ea6ba908391333a0354ceee032a0ef5093f6e61e8c001bd1",
+        "finalDocument": {
+          "root": [
+            1,
+            3.141592653589793,
+            [
+              -9007199254740993,
+              3.141592653589793
+            ]
+          ],
+          "3692": {
+            "😀": []
+          }
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-25",
+      "request": {
+        "baseline": {
+          "root": 9007199254740992
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-25-r0",
+            "preHash": "b5552c6ec4f238868f5518981528290cf564e9ffc0f8098a61776fbdb5ffc001",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/€73232",
+                "value": 885270.940278415
+              },
+              {
+                "op": "remove",
+                "path": "/€73232"
+              },
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/new37127"
+              },
+              {
+                "op": "remove",
+                "path": "/new37127"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-25-r1",
+            "preHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "postHash": "ae9dad62557cb3bb11119ce1ddc0420654c474b81459ceba49b9576a7b95cd39",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/x10286",
+                "value": null
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": [
+                  [
+                    "quote\""
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-25-r2",
+            "preHash": "ae9dad62557cb3bb11119ce1ddc0420654c474b81459ceba49b9576a7b95cd39",
+            "postHash": "7b0a3d680b7ac2f88e02e78fd98918d4ae2e876ab84f44f6c73be599d070f1fc",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/1",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-25-r0",
+          "fuzz-25-r1",
+          "fuzz-25-r2"
+        ],
+        "postHashes": [
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "ae9dad62557cb3bb11119ce1ddc0420654c474b81459ceba49b9576a7b95cd39",
+          "7b0a3d680b7ac2f88e02e78fd98918d4ae2e876ab84f44f6c73be599d070f1fc"
+        ],
+        "finalHash": "7b0a3d680b7ac2f88e02e78fd98918d4ae2e876ab84f44f6c73be599d070f1fc",
+        "finalDocument": [
+          [
+            "quote\""
+          ],
+          false
+        ]
+      }
+    },
+    {
+      "name": "fuzz-chain-26",
+      "request": {
+        "baseline": {
+          "x": "quote\"",
+          "😀": [],
+          "": [
+            "",
+            true
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-26-r0",
+            "preHash": "08434d11d214fa15063abe4d2d8dbbbcb14b3f96c7bb00ab19ccd1aa98103383",
+            "postHash": "23f0a3a8991c61b13618af6f726d440f2f0ba51eba1ac1e764e9c9d604ac217b",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "//1",
+                "path": "/😀/-"
+              },
+              {
+                "op": "add",
+                "path": "/a~1b8769",
+                "value": 7
+              },
+              {
+                "op": "add",
+                "path": "//-",
+                "value": {}
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-26-r1",
+            "preHash": "23f0a3a8991c61b13618af6f726d440f2f0ba51eba1ac1e764e9c9d604ac217b",
+            "postHash": "50ecf807adf8c151a68c6923c318e4213e27c211d74471bba65c37ec4d6c6e42",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/a~1b8769",
+                "value": 7
+              },
+              {
+                "op": "replace",
+                "path": "/x",
+                "value": {
+                  "€": null
+                }
+              },
+              {
+                "op": "move",
+                "from": "//2",
+                "path": "/😀/0"
+              },
+              {
+                "op": "replace",
+                "path": "/😀/1",
+                "value": [
+                  42
+                ]
+              },
+              {
+                "op": "replace",
+                "path": "/x/€",
+                "value": [
+                  [
+                    null,
+                    0,
+                    ""
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-26-r2",
+            "preHash": "50ecf807adf8c151a68c6923c318e4213e27c211d74471bba65c37ec4d6c6e42",
+            "postHash": "8b6c643d96dcb6157b0346f5fc464b01e40b2b20a5d828178aae4498f10379b3",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/x/€/0/0",
+                "value": null
+              },
+              {
+                "op": "remove",
+                "path": "/😀"
+              },
+              {
+                "op": "remove",
+                "path": "/x/€/0/0"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-26-r3",
+            "preHash": "8b6c643d96dcb6157b0346f5fc464b01e40b2b20a5d828178aae4498f10379b3",
+            "postHash": "e111260b85fe8a3505e9bc343ba8111620fa981e797540759ba9349a6b51eb98",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/a~1b8769",
+                "path": "/€94978"
+              },
+              {
+                "op": "test",
+                "path": "/",
+                "value": [
+                  "",
+                  true
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-26-r0",
+          "fuzz-26-r1",
+          "fuzz-26-r2",
+          "fuzz-26-r3"
+        ],
+        "postHashes": [
+          "23f0a3a8991c61b13618af6f726d440f2f0ba51eba1ac1e764e9c9d604ac217b",
+          "50ecf807adf8c151a68c6923c318e4213e27c211d74471bba65c37ec4d6c6e42",
+          "8b6c643d96dcb6157b0346f5fc464b01e40b2b20a5d828178aae4498f10379b3",
+          "e111260b85fe8a3505e9bc343ba8111620fa981e797540759ba9349a6b51eb98"
+        ],
+        "finalHash": "e111260b85fe8a3505e9bc343ba8111620fa981e797540759ba9349a6b51eb98",
+        "finalDocument": {
+          "x": {
+            "€": [
+              [
+                0,
+                ""
+              ]
+            ]
+          },
+          "": [
+            "",
+            true
+          ],
+          "€94978": 7
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-27",
+      "request": {
+        "baseline": {
+          "a/b": {},
+          "😀": [
+            "tab\tend"
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-27-r0",
+            "preHash": "2d75601cb43726252e839892b37f6cfe713871d7d01d2f2d7aeef8e15ce402b3",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/😀"
+              },
+              {
+                "op": "remove",
+                "path": "/a~1b"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-27-r0"
+        ],
+        "postHashes": [
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "finalHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "finalDocument": {}
+      }
+    },
+    {
+      "name": "fuzz-chain-28",
+      "request": {
+        "baseline": {
+          "root": ""
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-28-r0",
+            "preHash": "c7a6bb27c5a8a7621cd7b32893c84957b1be011090ddba0fe191726e7ca03d6c",
+            "postHash": "0c7993466c2fe166bb4bb0b7d6b0c70a2511845a5c06c5c95f9631995d87b1e3",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/root",
+                "path": "/x86109"
+              },
+              {
+                "op": "add",
+                "path": "/a~1b30909",
+                "value": {
+                  "a/b": [
+                    -9007199254740993,
+                    7
+                  ]
+                }
+              },
+              {
+                "op": "copy",
+                "from": "/a~1b30909/a~1b",
+                "path": "/a~1b30909/a~1b/-"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-28-r1",
+            "preHash": "0c7993466c2fe166bb4bb0b7d6b0c70a2511845a5c06c5c95f9631995d87b1e3",
+            "postHash": "759cd251c70cb1159c1d5947f12357e28fb617ff016cb6a53e732bf870fc390d",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/a~1b30909",
+                "value": {
+                  "a/b": 0.1,
+                  "😀": [],
+                  "k~v": 2.2250738585072014e-308
+                }
+              },
+              {
+                "op": "add",
+                "path": "/a~1b30909/a~1b91227",
+                "value": -1
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-28-r2",
+            "preHash": "759cd251c70cb1159c1d5947f12357e28fb617ff016cb6a53e732bf870fc390d",
+            "postHash": "5db1dab5db33476aba7117c15f5e47a09343b5039ccd81a778b61382be8bb18e",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/root",
+                "value": "😀"
+              },
+              {
+                "op": "remove",
+                "path": "/a~1b30909/a~1b"
+              },
+              {
+                "op": "remove",
+                "path": "/a~1b30909/k~0v"
+              },
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/new31617"
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {
+                  "x86109": "",
+                  "a/b30909": {
+                    "😀": [],
+                    "a/b91227": -1
+                  },
+                  "new31617": "😀"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-28-r0",
+          "fuzz-28-r1",
+          "fuzz-28-r2"
+        ],
+        "postHashes": [
+          "0c7993466c2fe166bb4bb0b7d6b0c70a2511845a5c06c5c95f9631995d87b1e3",
+          "759cd251c70cb1159c1d5947f12357e28fb617ff016cb6a53e732bf870fc390d",
+          "5db1dab5db33476aba7117c15f5e47a09343b5039ccd81a778b61382be8bb18e"
+        ],
+        "finalHash": "5db1dab5db33476aba7117c15f5e47a09343b5039ccd81a778b61382be8bb18e",
+        "finalDocument": {
+          "x86109": "",
+          "a/b30909": {
+            "😀": [],
+            "a/b91227": -1
+          },
+          "new31617": "😀"
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-29",
+      "request": {
+        "baseline": {
+          "root": "line\nbreak"
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-29-r0",
+            "preHash": "4fbb7291d50eb0fb2f58eb1c3a30c0d0f504ee0cd96c397dfcd33ad5659f0df4",
+            "postHash": "eec286e52c449273769878d042bde2c17df0b1d1552d4e6886256deb2272fda3",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": {
+                  "root": "line\nbreak"
+                }
+              },
+              {
+                "op": "add",
+                "path": "/54865",
+                "value": false
+              },
+              {
+                "op": "copy",
+                "from": "/54865",
+                "path": "/k~0v5663"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-29-r1",
+            "preHash": "eec286e52c449273769878d042bde2c17df0b1d1552d4e6886256deb2272fda3",
+            "postHash": "30c0e54477bf232040d99f50fcf71dc53b14b46c1ef0d00afdcbde191db68f2f",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/k~0v17277"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-29-r0",
+          "fuzz-29-r1"
+        ],
+        "postHashes": [
+          "eec286e52c449273769878d042bde2c17df0b1d1552d4e6886256deb2272fda3",
+          "30c0e54477bf232040d99f50fcf71dc53b14b46c1ef0d00afdcbde191db68f2f"
+        ],
+        "finalHash": "30c0e54477bf232040d99f50fcf71dc53b14b46c1ef0d00afdcbde191db68f2f",
+        "finalDocument": {
+          "54865": false,
+          "k~v5663": false,
+          "k~v17277": "line\nbreak"
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-30",
+      "request": {
+        "baseline": {
+          "root": 333333333.3333333
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-30-r0",
+            "preHash": "02133292d31c3a8b3b1a382acf4723ef236b482ec30bce3559bb2e460c505e6e",
+            "postHash": "ff4915bd6a3fc1cb41e17e68405e8c0a4cad7a9d7556c806bbe9165d49882483",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/root",
+                "value": true
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": [
+                  -9007199254740993,
+                  1e+30,
+                  [
+                    1,
+                    false
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-30-r1",
+            "preHash": "ff4915bd6a3fc1cb41e17e68405e8c0a4cad7a9d7556c806bbe9165d49882483",
+            "postHash": "3dbd4ad6e6629a23ec5d0bbe9054aa33d94954f4a914313c4ee1a46b7ee806dc",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/2/1"
+              },
+              {
+                "op": "add",
+                "path": "/2/1",
+                "value": [
+                  {
+                    "😀": 9007199254740992,
+                    "a/b": -10000000000.0,
+                    "n": -9007199254740993
+                  },
+                  "😀",
+                  {
+                    "n": "😀",
+                    "": "back\\slash"
+                  }
+                ]
+              },
+              {
+                "op": "copy",
+                "from": "/2",
+                "path": "/2/-"
+              },
+              {
+                "op": "remove",
+                "path": "/2/2/0"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-30-r2",
+            "preHash": "3dbd4ad6e6629a23ec5d0bbe9054aa33d94954f4a914313c4ee1a46b7ee806dc",
+            "postHash": "41bca4db90c31e811dbde0490279b9e6b6bb4bf8dbdb2d191dff171f32c3dc9f",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/2/1",
+                "value": 7
+              },
+              {
+                "op": "add",
+                "path": "/2/2/0/0/a~1b54077",
+                "value": [
+                  {
+                    "": "k~v",
+                    "n": null,
+                    "m": 1e-27
+                  },
+                  {
+                    "": 333333333.3333333,
+                    "a/b": false
+                  }
+                ]
+              },
+              {
+                "op": "add",
+                "path": "/2/2/0/0/a~1b54077/0/€2105",
+                "value": "😀"
+              },
+              {
+                "op": "add",
+                "path": "/2/2/0/0/a~1b54077/1/x94921",
+                "value": -0.0
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-30-r0",
+          "fuzz-30-r1",
+          "fuzz-30-r2"
+        ],
+        "postHashes": [
+          "ff4915bd6a3fc1cb41e17e68405e8c0a4cad7a9d7556c806bbe9165d49882483",
+          "3dbd4ad6e6629a23ec5d0bbe9054aa33d94954f4a914313c4ee1a46b7ee806dc",
+          "41bca4db90c31e811dbde0490279b9e6b6bb4bf8dbdb2d191dff171f32c3dc9f"
+        ],
+        "finalHash": "41bca4db90c31e811dbde0490279b9e6b6bb4bf8dbdb2d191dff171f32c3dc9f",
+        "finalDocument": [
+          -9007199254740993,
+          1e+30,
+          [
+            1,
+            7,
+            [
+              [
+                {
+                  "😀": 9007199254740992,
+                  "a/b": -10000000000.0,
+                  "n": -9007199254740993,
+                  "a/b54077": [
+                    {
+                      "": "k~v",
+                      "n": null,
+                      "m": 1e-27,
+                      "€2105": "😀"
+                    },
+                    {
+                      "": 333333333.3333333,
+                      "a/b": false,
+                      "x94921": -0.0
+                    }
+                  ]
+                },
+                "😀",
+                {
+                  "n": "😀",
+                  "": "back\\slash"
+                }
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fuzz-chain-31",
+      "request": {
+        "baseline": {
+          "€": -9007199254740993
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-31-r0",
+            "preHash": "f0a515a8c2f577b5372346d75c3d7ead94f8294f4be2ff476c4ede227650b335",
+            "postHash": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/€",
+                "path": "/99361"
+              },
+              {
+                "op": "remove",
+                "path": "/€"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": 0.0
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-31-r1",
+            "preHash": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+            "postHash": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": true
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-31-r2",
+            "preHash": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+            "postHash": "7a0c50b92434b015545fe93ab723db2d4b2cdd14a441405624a9ce8be29f1d5a",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": [
+                  true,
+                  [
+                    "tab\tend"
+                  ],
+                  42
+                ]
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": "😀"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-31-r3",
+            "preHash": "7a0c50b92434b015545fe93ab723db2d4b2cdd14a441405624a9ce8be29f1d5a",
+            "postHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": "line\nbreak"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": null
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-31-r4",
+            "preHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "postHash": "222fdfba133598d5726b687fa7e6cea14a6653e37849cd69ef9c4f0a06f3cd66",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": null
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": "tab\tend"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-31-r5",
+            "preHash": "222fdfba133598d5726b687fa7e6cea14a6653e37849cd69ef9c4f0a06f3cd66",
+            "postHash": "c955896a0e7e9bf24b9e4f2aafe6f4f069f6cfca561a107952a38ffdc3ca3bb3",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": null
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": [
+                  false,
+                  {
+                    "😀": 0.0,
+                    "n": "line\nbreak",
+                    "€": 146931.65375206142
+                  },
+                  1e+30
+                ]
+              },
+              {
+                "op": "replace",
+                "path": "/1/n",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-31-r0",
+          "fuzz-31-r1",
+          "fuzz-31-r2",
+          "fuzz-31-r3",
+          "fuzz-31-r4",
+          "fuzz-31-r5"
+        ],
+        "postHashes": [
+          "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+          "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+          "7a0c50b92434b015545fe93ab723db2d4b2cdd14a441405624a9ce8be29f1d5a",
+          "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "222fdfba133598d5726b687fa7e6cea14a6653e37849cd69ef9c4f0a06f3cd66",
+          "c955896a0e7e9bf24b9e4f2aafe6f4f069f6cfca561a107952a38ffdc3ca3bb3"
+        ],
+        "finalHash": "c955896a0e7e9bf24b9e4f2aafe6f4f069f6cfca561a107952a38ffdc3ca3bb3",
+        "finalDocument": [
+          false,
+          {
+            "😀": 0.0,
+            "n": false,
+            "€": 146931.65375206142
+          },
+          1e+30
+        ]
+      }
+    },
+    {
+      "name": "fuzz-chain-32",
+      "request": {
+        "baseline": {
+          "root": null
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-32-r0",
+            "preHash": "68eea43082b483a92750f96e1845e9795e1c28c283024fd60d83426bb3310ea9",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/root",
+                "value": null
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {
+                  "root": null
+                }
+              },
+              {
+                "op": "remove",
+                "path": "/root"
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {}
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-32-r1",
+            "preHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": []
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": []
+              },
+              {
+                "op": "add",
+                "path": "/-",
+                "value": 0.1
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": {}
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-32-r0",
+          "fuzz-32-r1"
+        ],
+        "postHashes": [
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "finalHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "finalDocument": {}
+      }
+    },
+    {
+      "name": "fuzz-chain-33",
+      "request": {
+        "baseline": {
+          "root": "😀"
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-33-r0",
+            "preHash": "dd918ad47368db31bfe00699cd21a3154cea292eed67225cd7e142ddf9234d39",
+            "postHash": "748281e13ff6b5d360d9559eccee5d74bb5931e27b0221aa7f9dc50bbf025e5b",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/root",
+                "path": "/€82374"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-33-r1",
+            "preHash": "748281e13ff6b5d360d9559eccee5d74bb5931e27b0221aa7f9dc50bbf025e5b",
+            "postHash": "aa5eeb9dbf070abaa7645847e527b69b374754035bcb81869c39153ecdad7d0c",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/a~1b28231"
+              },
+              {
+                "op": "test",
+                "path": "/€82374",
+                "value": "😀"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-33-r0",
+          "fuzz-33-r1"
+        ],
+        "postHashes": [
+          "748281e13ff6b5d360d9559eccee5d74bb5931e27b0221aa7f9dc50bbf025e5b",
+          "aa5eeb9dbf070abaa7645847e527b69b374754035bcb81869c39153ecdad7d0c"
+        ],
+        "finalHash": "aa5eeb9dbf070abaa7645847e527b69b374754035bcb81869c39153ecdad7d0c",
+        "finalDocument": {
+          "€82374": "😀",
+          "a/b28231": "😀"
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-34",
+      "request": {
+        "baseline": {
+          "root": -1
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-34-r0",
+            "preHash": "0f73aca1b4051975c7ef923a74fedc0fb95081d5f34269b44d597992f3bc5c9b",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/€47265"
+              },
+              {
+                "op": "remove",
+                "path": "/€47265"
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {}
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-34-r1",
+            "preHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": {}
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-34-r2",
+            "preHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "postHash": "0804875136e110e8a19d403b7885e634a274c1aa4920459e93fe18ec69416610",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/new68955",
+                "value": []
+              },
+              {
+                "op": "replace",
+                "path": "/new68955",
+                "value": ""
+              },
+              {
+                "op": "copy",
+                "from": "/new68955",
+                "path": "/€28860"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-34-r3",
+            "preHash": "0804875136e110e8a19d403b7885e634a274c1aa4920459e93fe18ec69416610",
+            "postHash": "26baf4828d488c0744642cf36f23d01ce4b66afd61a9a689d96e1c3f9015a3d9",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": 1e-27
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-34-r4",
+            "preHash": "26baf4828d488c0744642cf36f23d01ce4b66afd61a9a689d96e1c3f9015a3d9",
+            "postHash": "06a6535c3ff5c9da828e977bc53df452117cd1579a24be9595a0b154d601d75c",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": 1e-27
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": 0
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": [
+                  0.1
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-34-r5",
+            "preHash": "06a6535c3ff5c9da828e977bc53df452117cd1579a24be9595a0b154d601d75c",
+            "postHash": "9607afcaf54e76cd72c2b8ab1de18515b83bd70e7f57b4343579adceef4187d5",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/0",
+                "value": 0.1
+              },
+              {
+                "op": "remove",
+                "path": "/0"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": [
+                  null,
+                  "x"
+                ]
+              },
+              {
+                "op": "move",
+                "from": "/0",
+                "path": "/0"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-34-r0",
+          "fuzz-34-r1",
+          "fuzz-34-r2",
+          "fuzz-34-r3",
+          "fuzz-34-r4",
+          "fuzz-34-r5"
+        ],
+        "postHashes": [
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "0804875136e110e8a19d403b7885e634a274c1aa4920459e93fe18ec69416610",
+          "26baf4828d488c0744642cf36f23d01ce4b66afd61a9a689d96e1c3f9015a3d9",
+          "06a6535c3ff5c9da828e977bc53df452117cd1579a24be9595a0b154d601d75c",
+          "9607afcaf54e76cd72c2b8ab1de18515b83bd70e7f57b4343579adceef4187d5"
+        ],
+        "finalHash": "9607afcaf54e76cd72c2b8ab1de18515b83bd70e7f57b4343579adceef4187d5",
+        "finalDocument": [
+          null,
+          "x"
+        ]
+      }
+    },
+    {
+      "name": "fuzz-chain-35",
+      "request": {
+        "baseline": {
+          "root": false
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-35-r0",
+            "preHash": "33d0ca64a8c8b3424de5b52875e141d40e4389868f1db5648aae7cf65a1158ef",
+            "postHash": "f5effa31772a3689cb116700c569f4b72d765290968f099016a899ab6c1e4ee3",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/root"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": "a/b"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-35-r1",
+            "preHash": "f5effa31772a3689cb116700c569f4b72d765290968f099016a899ab6c1e4ee3",
+            "postHash": "cd4c5be79186a8a315a650267ff89bee563c7073313efc336071b0a445a01bdf",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": {
+                  "": null,
+                  "€": true
+                }
+              },
+              {
+                "op": "add",
+                "path": "/k~0v5411",
+                "value": "line\nbreak"
+              },
+              {
+                "op": "remove",
+                "path": "/k~0v5411"
+              },
+              {
+                "op": "add",
+                "path": "/x67377",
+                "value": {
+                  "k~v": {}
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-35-r0",
+          "fuzz-35-r1"
+        ],
+        "postHashes": [
+          "f5effa31772a3689cb116700c569f4b72d765290968f099016a899ab6c1e4ee3",
+          "cd4c5be79186a8a315a650267ff89bee563c7073313efc336071b0a445a01bdf"
+        ],
+        "finalHash": "cd4c5be79186a8a315a650267ff89bee563c7073313efc336071b0a445a01bdf",
+        "finalDocument": {
+          "": null,
+          "€": true,
+          "x67377": {
+            "k~v": {}
+          }
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-36",
+      "request": {
+        "baseline": {
+          "root": [
+            7,
+            {
+              "x": -1000.0
+            },
+            9007199254740992
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-36-r0",
+            "preHash": "4f33984864680679d301c87433c65a9e0133eea6ab589dd2b554b3682b59bc8c",
+            "postHash": "7bb558bb02f23e20a8e32566648a64402a58dfe2130e00be0049b987a171f698",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/root/1",
+                "value": {
+                  "": 3.141592653589793,
+                  "😀": -100000000000.0
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-36-r0"
+        ],
+        "postHashes": [
+          "7bb558bb02f23e20a8e32566648a64402a58dfe2130e00be0049b987a171f698"
+        ],
+        "finalHash": "7bb558bb02f23e20a8e32566648a64402a58dfe2130e00be0049b987a171f698",
+        "finalDocument": {
+          "root": [
+            7,
+            {
+              "": 3.141592653589793,
+              "😀": -100000000000.0
+            },
+            9007199254740992
+          ]
+        }
+      }
+    },
+    {
+      "name": "fuzz-chain-37",
+      "request": {
+        "baseline": {
+          "root": 1
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-37-r0",
+            "preHash": "299c91466bfabe47afb4ca6f073ec3569e8e26cb99d00aeac5367eb33ae49f38",
+            "postHash": "76d8ff1119138ef2f1aa5e5cfefdf658402fb1eacede58eb6f4e54ceda736810",
+            "operations": [
+              {
+                "op": "copy",
+                "from": "/root",
+                "path": "/€74854"
+              },
+              {
+                "op": "move",
+                "from": "/root",
+                "path": "/x72070"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-37-r1",
+            "preHash": "76d8ff1119138ef2f1aa5e5cfefdf658402fb1eacede58eb6f4e54ceda736810",
+            "postHash": "d0d91846bf13e44b971623c544843e166171166b2cd2ab92941d173aef67fa1d",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/x72070",
+                "value": 42
+              },
+              {
+                "op": "move",
+                "from": "/€74854",
+                "path": "/x51257"
+              },
+              {
+                "op": "replace",
+                "path": "/x72070",
+                "value": 0.1
+              },
+              {
+                "op": "copy",
+                "from": "/x72070",
+                "path": "/new45544"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-37-r2",
+            "preHash": "d0d91846bf13e44b971623c544843e166171166b2cd2ab92941d173aef67fa1d",
+            "postHash": "cff8c12b186dff17edef19709e49a4861c7720e6556892a9a14e4c17c56389ce",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/€56445",
+                "value": -9007199254740993
+              },
+              {
+                "op": "replace",
+                "path": "/x51257",
+                "value": 7
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-37-r3",
+            "preHash": "cff8c12b186dff17edef19709e49a4861c7720e6556892a9a14e4c17c56389ce",
+            "postHash": "ba2df4903a2c14e86dc3bcca58911b44ac1d2514b7227bf6eb08cfb978f55a1b",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": 1e-27
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": 1e-27
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": "x"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-37-r4",
+            "preHash": "ba2df4903a2c14e86dc3bcca58911b44ac1d2514b7227bf6eb08cfb978f55a1b",
+            "postHash": "ba2df4903a2c14e86dc3bcca58911b44ac1d2514b7227bf6eb08cfb978f55a1b",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": "x"
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": "x"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-37-r0",
+          "fuzz-37-r1",
+          "fuzz-37-r2",
+          "fuzz-37-r3",
+          "fuzz-37-r4"
+        ],
+        "postHashes": [
+          "76d8ff1119138ef2f1aa5e5cfefdf658402fb1eacede58eb6f4e54ceda736810",
+          "d0d91846bf13e44b971623c544843e166171166b2cd2ab92941d173aef67fa1d",
+          "cff8c12b186dff17edef19709e49a4861c7720e6556892a9a14e4c17c56389ce",
+          "ba2df4903a2c14e86dc3bcca58911b44ac1d2514b7227bf6eb08cfb978f55a1b",
+          "ba2df4903a2c14e86dc3bcca58911b44ac1d2514b7227bf6eb08cfb978f55a1b"
+        ],
+        "finalHash": "ba2df4903a2c14e86dc3bcca58911b44ac1d2514b7227bf6eb08cfb978f55a1b",
+        "finalDocument": "x"
+      }
+    },
+    {
+      "name": "fuzz-chain-38",
+      "request": {
+        "baseline": {
+          "root": -0.0
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-38-r0",
+            "preHash": "0ea4905f23961ee330a3cb0163240c8cc15e07e641a2a325670afc301cc25f7d",
+            "postHash": "0f73aca1b4051975c7ef923a74fedc0fb95081d5f34269b44d597992f3bc5c9b",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": {
+                  "root": -0.0
+                }
+              },
+              {
+                "op": "copy",
+                "from": "/root",
+                "path": "/a~1b60535"
+              },
+              {
+                "op": "remove",
+                "path": "/a~1b60535"
+              },
+              {
+                "op": "replace",
+                "path": "/root",
+                "value": -1
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-38-r1",
+            "preHash": "0f73aca1b4051975c7ef923a74fedc0fb95081d5f34269b44d597992f3bc5c9b",
+            "postHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "operations": [
+              {
+                "op": "remove",
+                "path": "/root"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-38-r2",
+            "preHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "postHash": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "",
+                "value": {}
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": false
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-38-r3",
+            "preHash": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+            "postHash": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": false
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-38-r0",
+          "fuzz-38-r1",
+          "fuzz-38-r2",
+          "fuzz-38-r3"
+        ],
+        "postHashes": [
+          "0f73aca1b4051975c7ef923a74fedc0fb95081d5f34269b44d597992f3bc5c9b",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+          "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+        ],
+        "finalHash": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+        "finalDocument": false
+      }
+    },
+    {
+      "name": "fuzz-chain-39",
+      "request": {
+        "baseline": {
+          "root": [
+            [
+              null,
+              42
+            ],
+            false,
+            true
+          ]
+        },
+        "revisions": [
+          {
+            "revisionId": "fuzz-39-r0",
+            "preHash": "7acb3ae368e46272317dce1e2267a1d86a77c44149301ce464a68c6c6f19d827",
+            "postHash": "35dc8a5290cb6ded3fb3112272be7d02ac40a90bf442fd0b8fe881440f4a805d",
+            "operations": [
+              {
+                "op": "move",
+                "from": "/root/0/1",
+                "path": "/x25779"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-39-r1",
+            "preHash": "35dc8a5290cb6ded3fb3112272be7d02ac40a90bf442fd0b8fe881440f4a805d",
+            "postHash": "96956d3bb1865915307809da3ec633ca0f2bc1b7748bdf19cc780af806430e4c",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/€19932",
+                "value": [
+                  -9007199254740993,
+                  false
+                ]
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": {
+                  "😀": [
+                    42,
+                    42
+                  ]
+                }
+              },
+              {
+                "op": "replace",
+                "path": "/😀",
+                "value": {
+                  "": "a/b"
+                }
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-39-r2",
+            "preHash": "96956d3bb1865915307809da3ec633ca0f2bc1b7748bdf19cc780af806430e4c",
+            "postHash": "ca106e698c4d71e7a3cdbe783e701cec762896453b4ff0932438e6d31e92098b",
+            "operations": [
+              {
+                "op": "test",
+                "path": "",
+                "value": {
+                  "😀": {
+                    "": "a/b"
+                  }
+                }
+              },
+              {
+                "op": "move",
+                "from": "/😀/",
+                "path": "/😀/a~1b57566"
+              },
+              {
+                "op": "test",
+                "path": "",
+                "value": {
+                  "😀": {
+                    "a/b57566": "a/b"
+                  }
+                }
+              },
+              {
+                "op": "replace",
+                "path": "/😀/a~1b57566",
+                "value": {
+                  "a/b": 42,
+                  "€": -1,
+                  "😀": 333333333.3333333
+                }
+              },
+              {
+                "op": "replace",
+                "path": "/😀/a~1b57566/a~1b",
+                "value": null
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-39-r3",
+            "preHash": "ca106e698c4d71e7a3cdbe783e701cec762896453b4ff0932438e6d31e92098b",
+            "postHash": "84598b5415b2d1b65005009e8479cdbdf1c54655deca9f595764ed0ebbf1ca6a",
+            "operations": [
+              {
+                "op": "test",
+                "path": "/😀/a~1b57566",
+                "value": {
+                  "a/b": null,
+                  "€": -1,
+                  "😀": 333333333.3333333
+                }
+              },
+              {
+                "op": "copy",
+                "from": "/😀/a~1b57566",
+                "path": "/x2590"
+              },
+              {
+                "op": "replace",
+                "path": "",
+                "value": [
+                  0.0,
+                  {
+                    "a/b": false
+                  },
+                  []
+                ]
+              },
+              {
+                "op": "replace",
+                "path": "/1/a~1b",
+                "value": {}
+              },
+              {
+                "op": "copy",
+                "from": "/0",
+                "path": "/1/x23783"
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-39-r4",
+            "preHash": "84598b5415b2d1b65005009e8479cdbdf1c54655deca9f595764ed0ebbf1ca6a",
+            "postHash": "0e6f3084fc198e3fa07d3765e8b099d4a4904b70055ddad0e238076d62aa53c0",
+            "operations": [
+              {
+                "op": "add",
+                "path": "/-",
+                "value": 0
+              },
+              {
+                "op": "replace",
+                "path": "/1",
+                "value": [
+                  {
+                    "😀": "€",
+                    "n": true,
+                    "a/b": 9007199254740992
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "revisionId": "fuzz-39-r5",
+            "preHash": "0e6f3084fc198e3fa07d3765e8b099d4a4904b70055ddad0e238076d62aa53c0",
+            "postHash": "ef3907463249960b4ee5591b36fb8a860ef172225b35513f79eaa5fbfa3183c5",
+            "operations": [
+              {
+                "op": "replace",
+                "path": "/3",
+                "value": [
+                  0,
+                  [
+                    68430.40202433048
+                  ]
+                ]
+              },
+              {
+                "op": "test",
+                "path": "/3/1/0",
+                "value": 68430.40202433048
+              },
+              {
+                "op": "move",
+                "from": "/3/0",
+                "path": "/1/-"
+              },
+              {
+                "op": "test",
+                "path": "/1/1",
+                "value": 0
+              },
+              {
+                "op": "remove",
+                "path": "/0"
+              }
+            ]
+          }
+        ]
+      },
+      "status": 200,
+      "expect": {
+        "revisionIds": [
+          "fuzz-39-r0",
+          "fuzz-39-r1",
+          "fuzz-39-r2",
+          "fuzz-39-r3",
+          "fuzz-39-r4",
+          "fuzz-39-r5"
+        ],
+        "postHashes": [
+          "35dc8a5290cb6ded3fb3112272be7d02ac40a90bf442fd0b8fe881440f4a805d",
+          "96956d3bb1865915307809da3ec633ca0f2bc1b7748bdf19cc780af806430e4c",
+          "ca106e698c4d71e7a3cdbe783e701cec762896453b4ff0932438e6d31e92098b",
+          "84598b5415b2d1b65005009e8479cdbdf1c54655deca9f595764ed0ebbf1ca6a",
+          "0e6f3084fc198e3fa07d3765e8b099d4a4904b70055ddad0e238076d62aa53c0",
+          "ef3907463249960b4ee5591b36fb8a860ef172225b35513f79eaa5fbfa3183c5"
+        ],
+        "finalHash": "ef3907463249960b4ee5591b36fb8a860ef172225b35513f79eaa5fbfa3183c5",
+        "finalDocument": [
+          [
+            {
+              "😀": "€",
+              "n": true,
+              "a/b": 9007199254740992
+            },
+            0
+          ],
+          [],
+          [
+            [
+              68430.40202433048
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
