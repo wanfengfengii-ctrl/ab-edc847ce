@@ -1,0 +1,56 @@
+name: recipe-replay
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: recipe-replay-api:latest
+    environment:
+      # In-container listen port (fixed default; override APP_PORT on the host).
+      PORT: "8080"
+      HOST: "0.0.0.0"
+    # Host-side port is configurable: APP_PORT=9090 docker compose up -d
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:8080/healthz',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 3s
+    restart: unless-stopped
+
+  # One-shot verification gate:
+  #   docker compose run --rm verify
+  # Starts only after `api` passes its health check, runs unit tests, the
+  # application build check and an HTTP smoke suite over real HTTP, then
+  # exits non-zero if anything failed.
+  verify:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: recipe-replay-api:latest
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      BASE_URL: "http://api:8080"
+    entrypoint: [""]
+    # This one-shot container runs no server; disable the image's inherited
+    # liveness probe so its health status is not reported as unhealthy.
+    healthcheck:
+      disable: true
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        echo "==> unit tests"
+        node test/run-tests.js
+        echo "==> application build"
+        node build.js
+        echo "==> HTTP smoke"
+        node test/smoke.js
+        echo "==> verify OK"
+    restart: "no"
